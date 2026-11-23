@@ -42,7 +42,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const vinylDisc = document.getElementById("vinyl-disc");
   const musicTitleEl = document.getElementById("music-title");
 
-  if (cfg.musicUrl) bgAudio.src = cfg.musicUrl;
+  if (cfg.musicUrl) {
+    bgAudio.src = cfg.musicUrl;
+    bgAudio.addEventListener("error", () => {
+      if (cfg.musicFallbackUrl) {
+        console.log("Audio fallback to WAV format");
+        bgAudio.src = cfg.musicFallbackUrl;
+        bgAudio.load();
+      }
+    }, { once: true });
+  }
   if (cfg.musicTitle && musicTitleEl) musicTitleEl.textContent = cfg.musicTitle;
 
   function playSyntheticChime(freq = 523.25, duration = 0.8) {

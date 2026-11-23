@@ -11,9 +11,10 @@ window.BIRTHDAY_CONFIG = {
   turningAge: 30,
   
   // --- Background Music ---
-  // A soft, romantic acoustic piano track (Pixabay royalty-free)
-  musicUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-moment-113264.mp3",
-  musicTitle: "Romantic Piano Melody",
+  // Charming Music Box & Piano rendition of "Happy Birthday to You"
+  musicUrl: "happy-birthday.m4a",
+  musicFallbackUrl: "happy-birthday.wav",
+  musicTitle: "Happy Birthday to You 🎂🎵",
 
   // --- Photo Memories (Polaroids) ---
   // To use your own photos: drop photos in the `images/` folder as photo1.jpg, photo2.jpg, etc.
