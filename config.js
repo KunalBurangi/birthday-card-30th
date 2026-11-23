@@ -114,7 +114,7 @@ window.BIRTHDAY_CONFIG = {
       rotation: 2
     },
     {
-      src: "images/master's_completion.jpeg",
+      src: "images/masters_completion.jpeg",
       fallback: "images/first_ever_day_of_job.jpeg",
       caption: "Master's Degree Completed! 🎓",
       note: "Brains, beauty, grit, and triumph. So immensely proud of everything you worked for and achieved.",
