@@ -555,6 +555,41 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCandles();
 
   // ---------------------------------------------------------------------------
+  // 3D CAKE PERSPECTIVE TILT
+  // ---------------------------------------------------------------------------
+  const cakeStage = document.getElementById("cake-stage");
+  const cake3D = document.getElementById("cake-3d");
+
+  if (cakeStage && cake3D) {
+    function handleCakeTilt(clientX, clientY) {
+      const rect = cakeStage.getBoundingClientRect();
+      const x = clientX - rect.left - rect.width / 2;
+      const y = clientY - rect.top - rect.height / 2;
+      const rotY = (x / (rect.width / 2)) * 14;
+      const rotX = 10 - (y / (rect.height / 2)) * 8;
+      cake3D.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    }
+
+    cakeStage.addEventListener("mousemove", (e) => {
+      handleCakeTilt(e.clientX, e.clientY);
+    });
+
+    cakeStage.addEventListener("mouseleave", () => {
+      cake3D.style.transform = "rotateX(10deg) rotateY(0deg)";
+    });
+
+    cakeStage.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 0) {
+        handleCakeTilt(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    cakeStage.addEventListener("touchend", () => {
+      cake3D.style.transform = "rotateX(10deg) rotateY(0deg)";
+    });
+  }
+
+  // ---------------------------------------------------------------------------
   // 4. PAGE 3: POLAROID MEMORY LANE
   // ---------------------------------------------------------------------------
   const polaroidGrid = document.getElementById("polaroid-grid");

@@ -349,43 +349,232 @@ body {
 }
 
 /* -----------------------------------------------------------------------------
-   INTERACTIVE 30 CANDLES & CAKE
+   3D CYLINDRICAL CAKE & STAGE
    ----------------------------------------------------------------------------- */
-.cake-container {
+.cake-stage-3d {
   position: relative;
-  width: 320px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 420px;
+  margin: 15px auto 25px auto;
+  perspective: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.candles-rack {
+.cake-3d {
+  position: relative;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: rotateX(10deg);
+  transition: transform 0.15s ease-out;
+}
+
+/* 3D Tier Architecture */
+.cake-tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Tier 1 (Top Tier - Strawberry Rose) */
+.tier-1 {
+  width: 210px;
+  z-index: 30;
+  margin-bottom: -15px;
+}
+.tier-1 .tier-top {
+  width: 210px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #fff0f3 0%, #fbc2cb 50%, #e28898 100%);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -3px 6px rgba(0, 0, 0, 0.12);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tier-1 .tier-body {
+  width: 210px;
+  height: 55px;
+  margin-top: -30px;
+  border-radius: 0 0 50% 50% / 0 0 30px 30px;
+  background: linear-gradient(to right, #b8495d 0%, #d8687d 20%, #fcaab7 45%, #ffb3c0 55%, #df7084 80%, #9e364a 100%);
+  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.25), 0 8px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+/* Tier 2 (Middle Tier - Champagne Gold) */
+.tier-2 {
+  width: 275px;
+  z-index: 20;
+  margin-bottom: -20px;
+}
+.tier-2 .tier-top {
+  width: 275px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #fffcf5 0%, #fbe8c3 50%, #d8b06c 100%);
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.9), inset 0 -4px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+.tier-2 .tier-body {
+  width: 275px;
+  height: 65px;
+  margin-top: -36px;
+  border-radius: 0 0 50% 50% / 0 0 36px 36px;
+  background: linear-gradient(to right, #9e732e 0%, #c49646 20%, #fae29f 45%, #fff1ba 55%, #cfa352 80%, #875e1e 100%);
+  box-shadow: inset 0 -8px 14px rgba(0, 0, 0, 0.3), 0 10px 18px rgba(0, 0, 0, 0.12);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tier 3 (Base Tier - Velvet Crimson) */
+.tier-3 {
+  width: 340px;
+  z-index: 10;
+}
+.tier-3 .tier-top {
+  width: 340px;
+  height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #ffe6eb 0%, #f89fb0 50%, #c65369 100%);
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.9), inset 0 -5px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+}
+.tier-3 .tier-body {
+  width: 340px;
+  height: 75px;
+  margin-top: -42px;
+  border-radius: 0 0 50% 50% / 0 0 42px 42px;
+  background: linear-gradient(to right, #872033 0%, #ad3a4f 20%, #f4798f 45%, #ff8e9f 55%, #b54056 80%, #6e1324 100%);
+  box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.35), 0 14px 22px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frosting Drips on Tier 1 */
+.drip-row {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+}
+.drip {
+  width: 14px;
+  height: 18px;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
+}
+.drip-sm { height: 12px; width: 10px; }
+.drip-lg { height: 24px; width: 16px; }
+
+/* 3D Cake Stand / Pedestal */
+.cake-stand-3d {
+  width: 370px;
+  position: relative;
+  z-index: 5;
+  margin-top: -30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stand-platter {
+  width: 370px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #8c8c8c 0%, #c4c4c4 20%, #ffffff 50%, #dedede 75%, #7a7a7a 100%);
+  box-shadow: 0 16px 30px rgba(45, 30, 20, 0.28), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+}
+.stand-pillar {
+  width: 55px;
+  height: 25px;
+  margin-top: -16px;
+  background: linear-gradient(to right, #707070, #c0c0c0 40%, #ffffff 60%, #858585);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+.stand-base {
+  width: 190px;
+  height: 38px;
+  border-radius: 50%;
+  margin-top: -12px;
+  background: linear-gradient(to right, #6b6b6b, #b5b5b5 30%, #ffffff 55%, #757575);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* 3D Candles Array On Cake Top */
+.candles-rack-3d {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 190px;
+  height: 54px;
+  z-index: 50;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
-  max-width: 280px;
-  margin: 0 auto -8px auto;
-  position: relative;
-  z-index: 25;
+  align-items: center;
+  gap: 4px 6px;
+  pointer-events: auto;
 }
 
 .single-candle {
-  width: 6px;
-  height: 28px;
+  width: 5px;
+  height: 26px;
   border-radius: 3px;
   background: repeating-linear-gradient(
     45deg,
     #ffb703,
-    #ffb703 4px,
-    #fb8500 4px,
-    #fb8500 8px
+    #ffb703 3px,
+    #fb8500 3px,
+    #fb8500 6px
   );
   position: relative;
   cursor: pointer;
   transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.single-candle::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: -2px;
+  width: 9px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
 }
 
 .single-candle:hover {
-  transform: scale(1.25);
+  transform: scale(1.3) translateY(-2px);
+  z-index: 60;
 }
 
 .candle-flame {

@@ -146,35 +146,67 @@
           </p>
         </div>
 
-        <!-- Interactive 3-Tier Cake with 30 Candles -->
-        <div class="cake-container my-6">
-          <div id="candles-rack" class="candles-rack">
-            <!-- 30 candles generated dynamically -->
-          </div>
-
-          <!-- Tier 1 (Top) -->
-          <div class="w-48 h-12 bg-gradient-to-r from-rose-200 via-rose-100 to-rose-200 mx-auto rounded-t-xl border-b-4 border-rose-300 relative shadow-sm">
-            <div class="absolute -bottom-2 inset-x-0 h-4 bg-white/70 rounded-full"></div>
-          </div>
-
-          <!-- Tier 2 (Middle) -->
-          <div class="w-64 h-16 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 mx-auto border-b-4 border-amber-200 relative shadow-md">
-            <div class="flex justify-around items-center h-full px-4">
-              <span class="text-xs font-bold text-amber-600 font-serif-title">★ CHAPTER 30 ★</span>
+        <!-- 3D Cylindrical Cake Stage -->
+        <div class="cake-stage-3d my-6" id="cake-stage">
+          <div class="cake-3d" id="cake-3d">
+            
+            <!-- 30 Candles Rack on 3D Top Tier -->
+            <div id="candles-rack" class="candles-rack-3d">
+              <!-- 30 candles generated dynamically -->
             </div>
-          </div>
 
-          <!-- Tier 3 (Bottom Base) -->
-          <div class="w-80 h-20 bg-gradient-to-r from-rose-300 via-rose-200 to-rose-300 mx-auto rounded-b-2xl relative shadow-lg">
-            <div class="flex justify-center items-center h-full">
-              <div class="bg-white/80 px-4 py-1.5 rounded-full shadow-inner border border-rose-200">
-                <span class="font-handwriting text-2xl font-bold text-rose-600">30 & Thriving</span>
+            <!-- Tier 1 (Top Tier - Strawberry Rose) -->
+            <div class="cake-tier tier-1">
+              <div class="tier-top">
+                <div class="w-2.5 h-2.5 rounded-full bg-rose-400 opacity-60"></div>
+              </div>
+              <div class="tier-body">
+                <div class="drip-row">
+                  <span class="drip drip-lg"></span>
+                  <span class="drip drip-sm"></span>
+                  <span class="drip"></span>
+                  <span class="drip drip-lg"></span>
+                  <span class="drip drip-sm"></span>
+                  <span class="drip"></span>
+                  <span class="drip drip-lg"></span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Cake Platter Plate -->
-          <div class="w-96 h-4 bg-stone-300 rounded-full mx-auto -mt-1 shadow-md border-b-2 border-stone-400"></div>
+            <!-- Tier 2 (Middle Tier - Champagne Gold) -->
+            <div class="cake-tier tier-2">
+              <div class="tier-top">
+                <span class="text-[10px] font-bold text-amber-800 tracking-wider font-serif-title uppercase bg-amber-200/60 px-3 py-0.5 rounded-full border border-amber-300/60 shadow-sm">
+                  ★ Chapter 30 ★
+                </span>
+              </div>
+              <div class="tier-body">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-amber-100 shadow-sm"></span>
+                  <span class="w-2 h-2 rounded-full bg-amber-100 shadow-sm"></span>
+                  <span class="w-2 h-2 rounded-full bg-amber-100 shadow-sm"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tier 3 (Base Tier - Velvet Crimson) -->
+            <div class="cake-tier tier-3">
+              <div class="tier-top"></div>
+              <div class="tier-body">
+                <div class="bg-white/90 px-5 py-1 rounded-full shadow-md border border-rose-200/80 transform hover:scale-105 transition">
+                  <span class="font-handwriting text-2xl font-bold text-rose-600">30 & Thriving ✨</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3D Pedestal Cake Stand -->
+            <div class="cake-stand-3d">
+              <div class="stand-platter"></div>
+              <div class="stand-pillar"></div>
+              <div class="stand-base"></div>
+            </div>
+
+          </div>
         </div>
 
         <!-- Live Breath Detection & Status Meter (Running Automatically) -->
