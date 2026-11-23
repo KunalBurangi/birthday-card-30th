@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy 30th Birthday, My Love! ✨🎂</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="selection:bg-rose-200 selection:text-rose-900">
+
+  <!-- =========================================================================
+       1. ENVELOPE OPENING GATE
+       ========================================================================= -->
+  <div id="envelope-gate">
+    <div class="relative max-w-md w-full bg-[#f4ece1] rounded-2xl p-8 sm:p-10 shadow-2xl border-4 border-[#e5d3bc] text-center transform transition-all duration-700">
+      
+      <!-- Top washi tape -->
+      <div class="washi-tape tape-top-center"></div>
+
+      <!-- Airmail / Stamp styling -->
+      <div class="flex justify-between items-start mb-6">
+        <div class="text-left">
+          <span class="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+            Special Delivery 💌
+          </span>
+          <p class="text-xs text-stone-500 mt-1 font-mono">Date: November 30, 2026</p>
+        </div>
+        <div class="w-14 h-16 border-2 border-dashed border-rose-300 rounded flex flex-col items-center justify-center p-1 bg-white rotate-3 shadow-sm">
+          <span class="text-xs font-bold text-rose-500">30¢</span>
+          <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500 my-0.5"></i>
+          <span class="text-[9px] text-stone-400 uppercase font-mono">AIR MAIL</span>
+        </div>
+      </div>
+
+      <!-- Envelope Title -->
+      <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 font-bold mb-2">
+        A Special Delivery For
+      </h2>
+      <p id="gate-recipient-name" class="font-handwriting text-4xl sm:text-5xl text-rose-600 mb-6 font-bold">
+        Birthday Queen ✨
+      </p>
+
+      <p class="text-stone-600 text-sm mb-8 leading-relaxed">
+        Someone has prepared a handcrafted memory scrapbook to celebrate your monumental 30th birthday!
+      </p>
+
+      <!-- Wax Seal Button -->
+      <div class="flex flex-col items-center justify-center">
+        <button id="break-seal-btn" class="wax-seal group" aria-label="Break Seal to Open">
+          <!-- Inner '30' styled in CSS -->
+        </button>
+        <p class="font-note text-lg text-stone-500 mt-3 animate-pulse">
+          ✨ Tap the wax seal to unwrap your card ✨
+        </p>
+      </div>
+
+      <p class="text-[11px] text-stone-400 mt-6 italic">
+        Tip: Make sure your sound is on for the background music 🎵
+      </p>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MAIN SCRAPBOOK CONTENT
+       ========================================================================= -->
+  <div id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+    <!-- Top Action Bar (Customizer Helper & Audio) -->
+    <header class="flex justify-between items-center mb-10">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 text-xs font-medium px-3 py-1.5 rounded-full border border-amber-200 shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+          Chapter 30 • Limited Edition
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Quick Personalize Modal Trigger -->
+        <button id="open-customizer-btn" class="inline-flex items-center gap-1.5 bg-white text-stone-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-stone-300 shadow-sm hover:bg-stone-50 transition">
+          <i data-lucide="settings" class="w-3.5 h-3.5 text-stone-500"></i>
+          <span>Personalize Card</span>
+        </button>
+      </div>
+    </header>
+
+
+    <!-- =======================================================================
+         HERO SECTION: SCRAPBOOK BANNER
+         ======================================================================= -->
+    <section class="relative bg-[#fffdfa] rounded-3xl p-8 sm:p-14 shadow-xl border-2 border-[#ede3d5] mb-16 overflow-hidden">
+      
+      <!-- Washi tape decorations on corners -->
+      <div class="washi-tape tape-top-left"></div>
+      <div class="washi-tape tape-top-right"></div>
+
+      <!-- Cute Stamps & Badges -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div class="inline-flex items-center gap-2 bg-rose-50 text-rose-600 px-4 py-1.5 rounded-full border border-rose-200">
+          <i data-lucide="cake" class="w-4 h-4"></i>
+          <span class="font-semibold text-xs tracking-wide uppercase">Official 30th Birthday Edition</span>
+        </div>
+        <div class="font-note text-stone-500 text-lg">
+          📍 November 30, 2026
+        </div>
+      </div>
+
+      <!-- Main Headline -->
+      <div class="text-center my-6">
+        <h1 class="font-serif-title text-4xl sm:text-6xl lg:text-7xl font-bold text-stone-800 leading-tight">
+          Happy 30th Birthday, <br class="hidden sm:inline">
+          <span id="hero-name" class="font-handwriting text-5xl sm:text-7xl lg:text-8xl text-rose-500 inline-block rotate-[-1deg]">
+            My Sunshine!
+          </span>
+        </h1>
+        <p class="max-w-2xl mx-auto text-stone-600 sm:text-lg mt-4 font-note text-xl">
+          Welcome to the flirty, fabulous, and unforgettable thirties! Today is all about celebrating you, your heart, and the magic you bring into my world.
+        </p>
+      </div>
+
+      <!-- Milestone Stat Badges -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-dashed border-stone-200 text-center">
+        <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-100">
+          <div class="text-2xl sm:text-3xl font-bold text-amber-700 font-serif-title">30</div>
+          <div class="text-xs text-amber-800 uppercase tracking-wider font-semibold mt-1">Glorious Years</div>
+        </div>
+        <div class="p-4 bg-rose-50/60 rounded-2xl border border-rose-100">
+          <div class="text-2xl sm:text-3xl font-bold text-rose-700 font-serif-title">360</div>
+          <div class="text-xs text-rose-800 uppercase tracking-wider font-semibold mt-1">Months of Radiance</div>
+        </div>
+        <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100">
+          <div class="text-2xl sm:text-3xl font-bold text-orange-700 font-serif-title">10,958</div>
+          <div class="text-xs text-orange-800 uppercase tracking-wider font-semibold mt-1">Days of Being Loved</div>
+        </div>
+        <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100">
+          <div class="text-2xl sm:text-3xl font-bold text-emerald-700 font-serif-title">∞</div >
+          <div class="text-xs text-emerald-800 uppercase tracking-wider font-semibold mt-1">Forever To Go</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         INTERACTIVE 30 CANDLES BIRTHDAY CAKE
+         ======================================================================= -->
+    <section class="relative bg-[#fffdfa] rounded-3xl p-8 sm:p-12 shadow-xl border-2 border-[#ede3d5] mb-16 text-center">
+      <div class="pushpin"></div>
+
+      <div class="max-w-xl mx-auto mb-6">
+        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          Make A Wish! 🎂
+        </span>
+        <h2 class="font-serif-title text-3xl sm:text-4xl font-bold text-stone-800">
+          Blow Out Your 30 Candles
+        </h2>
+        <p class="font-note text-lg sm:text-xl text-stone-600 mt-2">
+          Close your eyes, think of your biggest wish for chapter 30, and tap the candles or press the button below!
+        </p>
+      </div>
+
+      <!-- Cake Visual with 30 Candles -->
+      <div class="cake-container my-8">
+        
+        <!-- 30 Candles Array Container -->
+        <div id="candles-rack" class="candles-rack">
+          <!-- 30 candles generated by script -->
+        </div>
+
+        <!-- Tier 1 (Top) -->
+        <div class="w-48 h-12 bg-gradient-to-r from-rose-200 via-rose-100 to-rose-200 mx-auto rounded-t-xl border-b-4 border-rose-300 relative shadow-sm">
+          <div class="absolute -bottom-2 inset-x-0 h-4 bg-white/70 rounded-full"></div>
+        </div>
+
+        <!-- Tier 2 (Middle) -->
+        <div class="w-64 h-16 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 mx-auto border-b-4 border-amber-200 relative shadow-md">
+          <div class="flex justify-around items-center h-full px-4">
+            <span class="text-xs font-bold text-amber-600 font-serif-title">★ CHAPTER 30 ★</span>
+          </div>
+        </div>
+
+        <!-- Tier 3 (Bottom Base) -->
+        <div class="w-80 h-20 bg-gradient-to-r from-rose-300 via-rose-200 to-rose-300 mx-auto rounded-b-2xl relative shadow-lg">
+          <div class="flex justify-center items-center h-full">
+            <div class="bg-white/80 px-4 py-1.5 rounded-full shadow-inner border border-rose-200">
+              <span class="font-handwriting text-2xl font-bold text-rose-600">30 & Thriving</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cake Platter Plate -->
+        <div class="w-96 h-4 bg-stone-300 rounded-full mx-auto -mt-1 shadow-md border-b-2 border-stone-400"></div>
+      </div>
+
+      <!-- Candle Controls & Wish Status -->
+      <div class="flex flex-col items-center justify-center gap-4 mt-6">
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <!-- Actual Mic Blow Button -->
+          <button id="start-mic-blow-btn" class="inline-flex items-center gap-2.5 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition transform">
+            <i data-lucide="mic" class="w-5 h-5"></i>
+            <span>Blow Into Your Mic! 🎙️💨</span>
+          </button>
+
+          <!-- Alternative Click Blow Button -->
+          <button id="blow-all-candles-btn" class="inline-flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold px-5 py-3.5 rounded-full border border-stone-200 transition">
+            <i data-lucide="wind" class="w-4 h-4 text-stone-500"></i>
+            <span>Tap To Blow 🌬️</span>
+          </button>
+
+          <button id="relight-candles-btn" class="hidden inline-flex items-center gap-2 bg-stone-100 text-stone-700 font-semibold px-5 py-3.5 rounded-full hover:bg-stone-200 transition">
+            <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+            <span>Relight Candles</span>
+          </button>
+        </div>
+
+        <!-- Live Breath & Mic Detection Status Meter -->
+        <div id="mic-status-container" class="hidden w-full max-w-md bg-stone-50 border border-stone-200 rounded-2xl p-4 text-center transition-all">
+          <div class="flex items-center justify-center gap-2 text-stone-700 font-semibold text-sm mb-2">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+            </span>
+            <span id="mic-status-text">Listening... Blow directly onto your mic now! 🌬️</span>
+          </div>
+
+          <!-- Breath Level Visualizer Bar -->
+          <div class="w-full bg-stone-200 h-3 rounded-full overflow-hidden p-0.5">
+            <div id="mic-level-bar" class="h-full bg-gradient-to-r from-teal-400 via-amber-400 to-rose-500 rounded-full transition-all duration-75" style="width: 0%;"></div>
+          </div>
+          <p class="text-[11px] text-stone-400 mt-1.5 font-mono">
+            Wind power will flicker & blow out the candles!
+          </p>
+        </div>
+
+      </div>
+
+      <div id="wish-banner" class="hidden mt-6 p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl max-w-md mx-auto text-emerald-800 animate-bounce">
+        <span class="text-2xl">✨🎉</span>
+        <p class="font-handwriting text-2xl font-bold mt-1">
+          Your wish has been carried to the stars!
+        </p>
+        <p class="text-xs text-emerald-700">May every single dream of yours come true this year.</p>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         POLAROID MEMORY LANE (OUR STORY)
+         ======================================================================= -->
+    <section class="relative mb-16">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-10">
+        <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          Memory Scrapbook 📸
+        </span>
+        <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-stone-800">
+          A Decade of Beautiful Moments
+        </h2>
+        <p class="font-note text-xl text-stone-600 mt-2">
+          (Tap any photo to flip it over and read the memory behind it!)
+        </p>
+      </div>
+
+      <!-- Polaroid Grid -->
+      <div id="polaroid-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         30 REASONS WHY I LOVE YOU (INTERACTIVE CARDS)
+         ======================================================================= -->
+    <section class="relative bg-[#fffdfa] rounded-3xl p-6 sm:p-12 shadow-xl border-2 border-[#ede3d5] mb-16">
+      <div class="pushpin"></div>
+
+      <!-- Header & Progress -->
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          Golden 30 Collection 💖
+        </span>
+        <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-stone-800">
+          30 Reasons Why I Love You
+        </h2>
+        <p class="font-note text-xl text-stone-600 mt-2">
+          One for every year you've graced this earth. Tap each card to unlock!
+        </p>
+
+        <!-- Progress Tracker -->
+        <div class="mt-6">
+          <div class="flex justify-between items-center text-xs font-semibold text-stone-500 mb-1.5 px-1">
+            <span>Progress: <span id="revealed-count" class="text-rose-600 font-bold">0</span> / 30 Revealed</span>
+            <button id="reveal-all-reasons-btn" class="text-rose-600 hover:text-rose-700 underline text-xs">
+              Reveal All ✨
+            </button>
+          </div>
+          <div class="w-full bg-stone-200 h-2.5 rounded-full overflow-hidden">
+            <div id="reasons-progress-bar" class="bg-gradient-to-r from-rose-400 to-rose-600 h-full w-0 transition-all duration-500"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 30 Cards Grid -->
+      <div id="reasons-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         THE SECRET LOVE LETTER
+         ======================================================================= -->
+    <section class="relative max-w-3xl mx-auto mb-20">
+      
+      <!-- Washi tape on letter top -->
+      <div class="washi-tape tape-top-center"></div>
+
+      <div class="parchment-letter p-8 sm:p-14 relative overflow-hidden">
+        
+        <!-- Airmail border stamp / vintage crest -->
+        <div class="flex justify-between items-start border-b border-stone-200 pb-4 mb-6">
+          <div>
+            <h3 class="font-serif-title text-2xl sm:text-3xl font-bold text-stone-800">
+              A Letter For Your 30th
+            </h3>
+            <span class="text-xs text-stone-500 font-mono">CONFIDENTIAL & FOREVER</span>
+          </div>
+          <div class="w-12 h-12 rounded-full border-2 border-rose-300 flex items-center justify-center text-rose-500 bg-rose-50 shadow-inner">
+            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <!-- Salutation -->
+        <p id="letter-salutation" class="font-handwriting text-3xl sm:text-4xl text-rose-600 font-bold mb-4">
+          To My Dearest,
+        </p>
+
+        <!-- Paragraphs -->
+        <div id="letter-body" class="space-y-4 text-stone-700 text-base sm:text-lg leading-relaxed font-note">
+          <!-- Rendered dynamically from config.js -->
+        </div>
+
+        <!-- Signoff -->
+        <div class="mt-8 pt-6 border-t border-dashed border-stone-300 text-right">
+          <p id="letter-signoff" class="text-sm font-semibold text-stone-500 italic">
+            All my love, forever and always,
+          </p>
+          <p id="letter-signature" class="font-handwriting text-4xl text-rose-600 font-bold mt-1">
+            Yours ❤️
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Footer Note -->
+    <footer class="text-center text-stone-500 text-xs pb-16 font-mono">
+      Handcrafted with all the love in the world for her 30th Birthday • Nov 30, 2026
+    </footer>
+
+  </div>
+
+
+  <!-- =========================================================================
+       FLOATING AUDIO / MUSIC PLAYER WIDGET
+       ========================================================================= -->
+  <div class="music-widget">
+    <div id="vinyl-disc" class="vinyl-disc flex items-center justify-center shadow-inner">
+      <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+    </div>
+    <div class="text-left pr-2">
+      <p id="music-title" class="text-xs font-bold text-stone-800 leading-tight">Romantic Piano</p>
+      <p class="text-[10px] text-stone-500">Birthday Soundtrack</p>
+    </div>
+    <button id="toggle-music-btn" class="w-8 h-8 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center transition shadow-sm" aria-label="Toggle Audio">
+      <i id="music-icon" data-lucide="volume-2" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <audio id="bg-audio" loop preload="auto"></audio>
+
+
+  <!-- =========================================================================
+       CUSTOMIZE MODAL (FOR KUNAL TO PREVIEW & EDIT EASILY)
+       ========================================================================= -->
+  <div id="customizer-modal" class="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b">
+        <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
+          <i data-lucide="sliders" class="w-5 h-5 text-rose-500"></i>
+          Personalize This Card
+        </h3>
+        <button id="close-customizer-btn" class="text-stone-400 hover:text-stone-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-stone-500 mb-4">
+        You can customize her name and nickname right here in your browser, or permanently in <code class="bg-stone-100 text-rose-600 px-1 py-0.5 rounded font-mono">config.js</code>!
+      </p>
+
+      <form id="quick-custom-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Her Name</label>
+          <input type="text" id="input-name" class="w-full text-sm px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rose-400 outline-none" placeholder="e.g. Sarah">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Nickname / Pet Name</label>
+          <input type="text" id="input-nickname" class="w-full text-sm px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rose-400 outline-none" placeholder="e.g. My Sunshine">
+        </div>
+
+        <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+          <strong>📸 How to add your own photos:</strong>
+          <ol class="list-decimal list-inside mt-1.5 space-y-1">
+            <li>Place your photos in the <code class="font-mono bg-white px-1 py-0.5 rounded">images/</code> folder as <code class="font-mono">photo1.jpg</code>, <code class="font-mono">photo2.jpg</code>, etc.</li>
+            <li>Or edit captions & dates inside <code class="font-mono bg-white px-1 py-0.5 rounded">config.js</code>!</li>
+          </ol>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancel-custom-btn" class="px-4 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-100 rounded-lg">Cancel</button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-rose-500 hover:bg-rose-600 rounded-lg shadow">Apply Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Application Scripts -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
