@@ -1,5 +1,5 @@
 // ==============================================================================
-// 💖 30TH BIRTHDAY CARD APPLICATION LOGIC (MULTI-PAGE & EARLY MIC)
+// 💖 LUXURY KEEPSAKE BOOK LOGIC (FIGMA MATCHING SPEC)
 // ==============================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -8,21 +8,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------------------------------------------------------
   // STATE MANAGEMENT
   // ---------------------------------------------------------------------------
-  let currentPage = 1;
-  const totalPages = 5;
-  const pageTitles = [
-    "The Cover",
-    "The Birthday Cake",
-    "Memory Scrapbook",
-    "30 Reasons",
-    "The Love Letter"
+  let currentSpread = 1;
+  const totalSpreads = 4;
+  const spreadLabels = [
+    "COVER • 1 OF 4",
+    "MEMORIES • 2 OF 4",
+    "SURPRISES & SCRATCH • 3 OF 4",
+    "GRAND FINALE • 4 OF 4"
   ];
 
   let audioPlaying = false;
   let audioContext = null;
   let blownCandlesCount = 0;
   const totalCandles = 30;
-  let revealedReasonsCount = 0;
 
   // Microphone state
   let micStream = null;
@@ -46,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     bgAudio.src = cfg.musicUrl;
     bgAudio.addEventListener("error", () => {
       if (cfg.musicFallbackUrl) {
-        console.log("Audio fallback to WAV format");
         bgAudio.src = cfg.musicFallbackUrl;
         bgAudio.load();
       }
@@ -93,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (vinylDisc) vinylDisc.classList.add("spinning");
         updateMusicIcon(true);
       }).catch(err => {
-        console.log("Audio autoplay prevented, ready on gesture:", err);
+        console.log("Autoplay waiting for touch:", err);
       });
     }
   }
@@ -125,47 +122,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------------------------------------------------------
   // 1. EARLY MICROPHONE PERMISSION REQUEST (UPON WEBSITE OPEN)
   // ---------------------------------------------------------------------------
-  async function requestMicPermissionEarly() {
+  async function requestMicEarly() {
     if (micPermissionRequested) return;
     micPermissionRequested = true;
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.warn("Microphone access not supported on this browser.");
-      return;
-    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
 
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!micAudioContext && AudioCtx) {
-      micAudioContext = new AudioCtx();
-    }
-
-    const audioConstraints = {
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false
-      },
-      video: false
-    };
+    if (!micAudioContext && AudioCtx) micAudioContext = new AudioCtx();
 
     try {
-      // Prompt browser permission immediately
-      micStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
-      console.log("Microphone access pre-authorized successfully!");
-
-      // If user is already on Cake page or moves to it, connect immediately
-      if (currentPage === 2) {
-        setupAndStartMic();
-      }
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+        video: false
+      });
+      console.log("Microphone pre-authorized!");
+      if (currentSpread === 4) setupAndStartMic();
     } catch (err) {
-      console.log("Early mic request waiting for interaction or basic constraints:", err);
-      // Fallback: try on first user click anywhere
+      console.log("Early mic permission waiting for gesture:", err);
       window.addEventListener("pointerdown", () => {
         if (!micStream) {
           navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
             micStream = s;
-            if (currentPage === 2) setupAndStartMic();
-          }).catch(e => console.warn("Mic denied:", e));
+            if (currentSpread === 4) setupAndStartMic();
+          }).catch(e => console.warn(e));
         }
         if (micAudioContext && micAudioContext.state === "suspended") {
           micAudioContext.resume();
@@ -174,10 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Request mic permission on page load
-  requestMicPermissionEarly();
+  requestMicEarly();
 
-  // Resume AudioContext on first touch/click anywhere
+  // Resume Audio on first touch/click anywhere
   window.addEventListener("pointerdown", () => {
     if (micAudioContext && micAudioContext.state === "suspended") {
       micAudioContext.resume();
@@ -186,153 +165,266 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { once: true });
 
   // ---------------------------------------------------------------------------
-  // 2. MULTI-PAGE CARD BOOK NAVIGATION (GESTURES, TAPS, ARROWS)
+  // 2. 4-SPREAD BOOK NAVIGATION
   // ---------------------------------------------------------------------------
-  const cardPages = document.querySelectorAll(".card-page");
+  const spreads = document.querySelectorAll(".book-spread");
   const prevPageBtn = document.getElementById("prev-page-btn");
   const nextPageBtn = document.getElementById("next-page-btn");
   const pageTitleLabel = document.getElementById("page-title-label");
   const navDots = document.querySelectorAll(".nav-dot");
-  const cardBook = document.getElementById("card-book");
 
-  function goToPage(pageIndex) {
-    if (pageIndex < 1 || pageIndex > totalPages) return;
-    currentPage = pageIndex;
+  function goToSpread(spreadNum) {
+    if (spreadNum < 1 || spreadNum > totalSpreads) return;
+    currentSpread = spreadNum;
 
-    // Update active page
-    cardPages.forEach((page) => {
-      const pageNum = parseInt(page.dataset.page, 10);
-      if (pageNum === currentPage) {
-        page.classList.add("active");
+    spreads.forEach(s => {
+      const num = parseInt(s.dataset.spread, 10);
+      if (num === currentSpread) {
+        s.classList.add("active");
       } else {
-        page.classList.remove("active");
+        s.classList.remove("active");
       }
     });
 
-    // Update nav label & dots
     if (pageTitleLabel) {
-      pageTitleLabel.textContent = `Page ${currentPage} of ${totalPages}: ${pageTitles[currentPage - 1]}`;
+      pageTitleLabel.textContent = spreadLabels[currentSpread - 1];
     }
 
-    navDots.forEach((dot) => {
-      const target = parseInt(dot.dataset.pageTarget, 10);
-      if (target === currentPage) {
+    navDots.forEach(dot => {
+      const target = parseInt(dot.dataset.spreadTarget, 10);
+      if (target === currentSpread) {
         dot.classList.add("active");
       } else {
         dot.classList.remove("active");
       }
     });
 
-    // Update Prev / Next buttons disabled states
-    if (prevPageBtn) prevPageBtn.disabled = (currentPage === 1);
-    if (nextPageBtn) nextPageBtn.disabled = (currentPage === totalPages);
+    if (prevPageBtn) prevPageBtn.disabled = (currentSpread === 1);
+    if (nextPageBtn) nextPageBtn.disabled = (currentSpread === totalSpreads);
 
-    // Scroll smoothly to top of card container on mobile
-    if (cardBook) {
-      const yOffset = -20;
-      const y = cardBook.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    // Smooth scroll to top of book
+    const bookEl = document.querySelector(".book-wrapper");
+    if (bookEl) {
+      const y = bookEl.getBoundingClientRect().top + window.pageYOffset - 15;
       window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
     }
 
-    // Play subtle page turn chime
-    playSyntheticChime(400 + currentPage * 40, 0.15);
+    playSyntheticChime(420 + currentSpread * 40, 0.15);
 
-    // If navigated to Page 2 (Cake), automatically activate microphone listening!
-    if (currentPage === 2) {
-      if (blownCandlesCount < totalCandles) {
-        setupAndStartMic();
-      }
+    // Spread 4: The Birthday Cake (Auto start mic)
+    if (currentSpread === 4) {
+      if (blownCandlesCount < totalCandles) setupAndStartMic();
     } else {
-      // Pause mic processing on other pages to preserve CPU/battery
       pauseMicListening();
+    }
+
+    // Spread 3: Initialize Scratch Cards when navigated to
+    if (currentSpread === 3) {
+      initScratchCards();
     }
   }
 
-  function nextPage() {
-    if (currentPage < totalPages) goToPage(currentPage + 1);
+  function nextSpread() {
+    if (currentSpread < totalSpreads) goToSpread(currentSpread + 1);
   }
 
-  function prevPage() {
-    if (currentPage > 1) goToPage(currentPage - 1);
+  function prevSpread() {
+    if (currentSpread > 1) goToSpread(currentSpread - 1);
   }
 
-  if (nextPageBtn) nextPageBtn.addEventListener("click", nextPage);
-  if (prevPageBtn) prevPageBtn.addEventListener("click", prevPage);
+  if (nextPageBtn) nextPageBtn.addEventListener("click", nextSpread);
+  if (prevPageBtn) prevPageBtn.addEventListener("click", prevSpread);
 
-  // Clickable Navigation Dots
-  navDots.forEach((dot) => {
+  navDots.forEach(dot => {
     dot.addEventListener("click", () => {
-      const target = parseInt(dot.dataset.pageTarget, 10);
-      if (target) goToPage(target);
+      const t = parseInt(dot.dataset.spreadTarget, 10);
+      if (t) goToSpread(t);
     });
   });
 
-  // "Next Page" in-content action buttons
-  document.querySelectorAll(".next-page-trigger").forEach((btn) => {
-    btn.addEventListener("click", nextPage);
-  });
-
-  // Cover Wax Seal open button
-  const coverOpenBtn = document.getElementById("cover-open-btn");
-  if (coverOpenBtn) {
-    coverOpenBtn.addEventListener("click", () => {
+  // Break Cover Wax Seal
+  const breakCoverSealBtn = document.getElementById("break-cover-seal-btn");
+  if (breakCoverSealBtn) {
+    breakCoverSealBtn.addEventListener("click", () => {
       playCelebrationFanfare();
       if (typeof confetti === "function") {
-        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
       }
-      goToPage(2);
+      goToSpread(2);
     });
   }
 
-  // Final page "Read Again" button
-  const backToCoverBtn = document.getElementById("back-to-cover-btn");
-  if (backToCoverBtn) {
-    backToCoverBtn.addEventListener("click", () => goToPage(1));
-  }
-
-  // Keyboard navigation (Arrow keys)
+  // Keyboard navigation
   window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight" || e.key === "PageDown") nextPage();
-    if (e.key === "ArrowLeft" || e.key === "PageUp") prevPage();
+    if (e.key === "ArrowRight" || e.key === "PageDown") nextSpread();
+    if (e.key === "ArrowLeft" || e.key === "PageUp") prevSpread();
   });
 
-  // ---------------------------------------------------------------------------
-  // TOUCH / SWIPE GESTURES FOR PAGE TURNING
-  // ---------------------------------------------------------------------------
+  // Touch Swipe Gestures
   let touchStartX = 0;
   let touchStartY = 0;
   let touchEndX = 0;
   let touchEndY = 0;
 
-  if (cardBook) {
-    cardBook.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
+  document.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
 
-    cardBook.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipe();
-    }, { passive: true });
-  }
-
-  function handleSwipe() {
+  document.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
     const diffX = touchEndX - touchStartX;
     const diffY = touchEndY - touchStartY;
-
-    // Horizontal swipe threshold: 45px, dominant over vertical scroll
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
-      if (diffX < 0) {
-        nextPage(); // Swiped left -> next page
-      } else {
-        prevPage(); // Swiped right -> prev page
+      if (diffX < 0) nextSpread();
+      else prevSpread();
+    }
+  }, { passive: true });
+
+  // ---------------------------------------------------------------------------
+  // 3. SPREAD 2: INTERACTIVE FILMSTRIP MEMORY SWAPPER
+  // ---------------------------------------------------------------------------
+  const filmThumbs = document.querySelectorAll(".film-thumb");
+  const presentPhotoImg = document.getElementById("present-photo-img");
+  const presentPhotoCaption = document.getElementById("present-photo-caption");
+  const presentPhotoNote = document.getElementById("present-photo-note");
+
+  filmThumbs.forEach(thumb => {
+    thumb.addEventListener("click", () => {
+      filmThumbs.forEach(t => {
+        t.classList.remove("active", "border-[#7b1e28]");
+        t.classList.add("border-stone-300");
+      });
+      thumb.classList.add("active", "border-[#7b1e28]");
+      thumb.classList.remove("border-stone-300");
+
+      const newSrc = thumb.dataset.img;
+      const newCap = thumb.dataset.caption;
+      const newNote = thumb.dataset.note;
+
+      if (presentPhotoImg) {
+        presentPhotoImg.style.opacity = "0.3";
+        setTimeout(() => {
+          presentPhotoImg.src = newSrc;
+          presentPhotoImg.style.opacity = "1";
+        }, 150);
+      }
+      if (presentPhotoCaption) presentPhotoCaption.textContent = newCap;
+      if (presentPhotoNote) presentPhotoNote.textContent = `"${newNote}"`;
+
+      playSyntheticChime(550, 0.12);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // 4. SPREAD 3: SURPRISE MINI ENVELOPES & LUCKY SCRATCH-OFFS
+  // ---------------------------------------------------------------------------
+  // Mini Envelopes
+  document.querySelectorAll(".open-env-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.env;
+      const textEl = document.getElementById(`env-text-${id}`);
+      if (textEl) {
+        textEl.classList.remove("line-clamp-2");
+      }
+      btn.textContent = "Unfolded 💌";
+      btn.disabled = true;
+      btn.classList.add("opacity-60");
+      playCelebrationFanfare();
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+      }
+    });
+  });
+
+  // Interactive Scratch Cards (Gold & Rose Gold Foil Canvas)
+  let scratchInitialized = false;
+
+  function initScratchCards() {
+    if (scratchInitialized) return;
+    scratchInitialized = true;
+
+    setupScratchCanvas("scratch-canvas-1", "gold");
+    setupScratchCanvas("scratch-canvas-2", "rosegold");
+  }
+
+  function setupScratchCanvas(canvasId, foilType) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const width = canvas.offsetWidth || 300;
+    const height = canvas.offsetHeight || 120;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Draw shimmering foil gradient
+    const grad = ctx.createLinearGradient(0, 0, width, height);
+    if (foilType === "gold") {
+      grad.addColorStop(0, "#c5a059");
+      grad.addColorStop(0.3, "#fef3c7");
+      grad.addColorStop(0.6, "#d4af37");
+      grad.addColorStop(1, "#b89228");
+    } else {
+      grad.addColorStop(0, "#c47a86");
+      grad.addColorStop(0.3, "#fed7aa");
+      grad.addColorStop(0.6, "#f497a7");
+      grad.addColorStop(1, "#9e364a");
+    }
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+
+    // Overlay text & sparkle dots
+    ctx.fillStyle = "#5a131e";
+    ctx.font = "bold 13px 'Plus Jakarta Sans', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("✦ SCRATCH TO UNLOCK SURPRISE ✦", width / 2, height / 2 - 8);
+
+    ctx.fillStyle = "rgba(90, 19, 30, 0.65)";
+    ctx.font = "11px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText("• Rub gently with cursor or finger •", width / 2, height / 2 + 14);
+
+    let isScratching = false;
+    let scratchedPixels = 0;
+    const totalPixels = width * height;
+
+    function scratch(e) {
+      if (!isScratching) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      scratchedPixels += 80;
+      if (scratchedPixels > totalPixels * 0.4) {
+        canvas.style.opacity = "0";
+        setTimeout(() => {
+          canvas.style.display = "none";
+        }, 500);
+        playCelebrationFanfare();
+        if (typeof confetti === "function") {
+          confetti({ particleCount: 70, spread: 70 });
+        }
       }
     }
+
+    canvas.addEventListener("mousedown", (e) => { isScratching = true; scratch(e); });
+    canvas.addEventListener("mousemove", scratch);
+    window.addEventListener("mouseup", () => { isScratching = false; });
+
+    canvas.addEventListener("touchstart", (e) => { isScratching = true; scratch(e); }, { passive: true });
+    canvas.addEventListener("touchmove", scratch, { passive: true });
+    window.addEventListener("touchend", () => { isScratching = false; });
   }
 
   // ---------------------------------------------------------------------------
-  // 3. PAGE 2: 30-CANDLE CAKE & REAL-TIME BLOW DETECTION
+  // 5. SPREAD 4: 3D CYLINDRICAL CAKE & REAL-TIME BLOW DETECTION
   // ---------------------------------------------------------------------------
   const candlesRack = document.getElementById("candles-rack");
   const blowAllBtn = document.getElementById("blow-all-candles-btn");
@@ -419,15 +511,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.random() * (max - min) + min;
   }
 
-  // Setup & connect microphone stream to analyser
+  // Connect microphone stream
   async function setupAndStartMic() {
     if (isListeningToMic) return;
 
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!micAudioContext && AudioCtx) {
-        micAudioContext = new AudioCtx();
-      }
+      if (!micAudioContext && AudioCtx) micAudioContext = new AudioCtx();
       if (micAudioContext && micAudioContext.state === "suspended") {
         await micAudioContext.resume();
       }
@@ -456,14 +546,14 @@ document.addEventListener("DOMContentLoaded", () => {
       breathAccumulator = 0;
 
       if (micStatusText) {
-        micStatusText.innerHTML = "🎙️ Mic Active: <strong>Blow onto your screen/mic now!</strong> 🌬️";
+        micStatusText.innerHTML = "🎙️ Mic Active: <strong>Blow onto your mic now!</strong> 🌬️";
       }
 
       processMicAudio();
     } catch (err) {
       console.log("Mic activation notice:", err);
       if (micStatusText) {
-        micStatusText.innerHTML = "Tap <em>'Or Tap To Blow'</em> below if mic is blocked!";
+        micStatusText.innerHTML = "Tap <em>'Tap Gentle Breeze'</em> below if mic is blocked!";
       }
     }
   }
@@ -474,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cancelAnimationFrame(micAnimId);
       micAnimId = null;
     }
-    document.querySelectorAll(".candle-flame").forEach((f) => {
+    document.querySelectorAll(".candle-flame").forEach(f => {
       f.classList.remove("fluttering");
       f.style.removeProperty("--blow-angle");
     });
@@ -483,7 +573,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function processMicAudio() {
     if (!isListeningToMic || !micAnalyser) return;
 
-    // Time domain RMS calculation
     const timeData = new Float32Array(micAnalyser.fftSize);
     micAnalyser.getFloatTimeDomainData(timeData);
     let sumSq = 0;
@@ -492,7 +581,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const rms = Math.sqrt(sumSq / timeData.length);
 
-    // Low-frequency wind energy calculation
     const freqData = new Uint8Array(micAnalyser.frequencyBinCount);
     micAnalyser.getByteFrequencyData(freqData);
     let lowFreqSum = 0;
@@ -515,10 +603,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const flames = document.querySelectorAll(".candle-flame");
 
-    // Real-time flame physics
     if (breathScore > 8) {
       const angle = Math.min(42, breathScore * 1.2);
-      flames.forEach((f) => {
+      flames.forEach(f => {
         f.classList.add("fluttering");
         f.style.setProperty("--blow-angle", `-${angle}deg`);
       });
@@ -527,11 +614,10 @@ document.addEventListener("DOMContentLoaded", () => {
         breathAccumulator += breathScore * 0.12;
       }
     } else {
-      flames.forEach((f) => f.classList.remove("fluttering"));
+      flames.forEach(f => f.classList.remove("fluttering"));
       breathAccumulator = Math.max(0, breathAccumulator - 0.4);
     }
 
-    // Trigger blowout condition
     if (breathScore >= 45 || breathAccumulator >= 8) {
       blowAllCandlesProgression();
       return;
@@ -570,226 +656,20 @@ document.addEventListener("DOMContentLoaded", () => {
       cake3D.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
     }
 
-    cakeStage.addEventListener("mousemove", (e) => {
-      handleCakeTilt(e.clientX, e.clientY);
-    });
-
+    cakeStage.addEventListener("mousemove", (e) => handleCakeTilt(e.clientX, e.clientY));
     cakeStage.addEventListener("mouseleave", () => {
       cake3D.style.transform = "rotateX(10deg) rotateY(0deg)";
     });
-
     cakeStage.addEventListener("touchmove", (e) => {
-      if (e.touches.length > 0) {
-        handleCakeTilt(e.touches[0].clientX, e.touches[0].clientY);
-      }
+      if (e.touches.length > 0) handleCakeTilt(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
-
     cakeStage.addEventListener("touchend", () => {
       cake3D.style.transform = "rotateX(10deg) rotateY(0deg)";
     });
   }
 
   // ---------------------------------------------------------------------------
-  // 4. PAGE 3: POLAROID MEMORY LANE
-  // ---------------------------------------------------------------------------
-  const polaroidGrid = document.getElementById("polaroid-grid");
-
-  function renderPolaroids() {
-    if (!polaroidGrid || !cfg.polaroids) return;
-    polaroidGrid.innerHTML = "";
-
-    const tapeStyles = ["tape-top-center", "tape-top-left", "tape-top-right"];
-
-    cfg.polaroids.forEach((item, index) => {
-      const tapeClass = tapeStyles[index % tapeStyles.length];
-      const rotation = item.rotation || (index % 2 === 0 ? -2.5 : 2.5);
-
-      const card = document.createElement("div");
-      card.className = "polaroid-card";
-      card.style.transform = `rotate(${rotation}deg)`;
-
-      card.innerHTML = `
-        <div class="polaroid-inner">
-          <div class="washi-tape ${tapeClass}"></div>
-          
-          <!-- FRONT -->
-          <div class="polaroid-front">
-            <div class="polaroid-img-wrapper">
-              <img src="${item.src}" alt="${item.caption}" onerror="this.onerror=null; this.src='${item.fallback}';">
-            </div>
-            <div class="mt-3 text-center">
-              <p class="font-note text-xl font-bold text-stone-800 leading-snug">${item.caption}</p>
-              <div class="flex items-center justify-between text-xs text-stone-400 font-mono mt-1">
-                <span>📸 #${index + 1}</span>
-                <span>${item.date}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- BACK -->
-          <div class="polaroid-back">
-            <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 mb-3 shadow-inner">
-              <i data-lucide="heart" class="w-4 h-4 fill-rose-400 text-rose-500"></i>
-            </div>
-            <h4 class="font-serif-title font-bold text-stone-800 text-base mb-2">${item.caption}</h4>
-            <p class="font-note text-lg text-stone-600 leading-relaxed italic mb-4">"${item.note}"</p>
-            <div class="mt-auto border-t border-dashed border-stone-200 pt-2 w-full text-xs font-mono text-stone-400 flex justify-between">
-              <span>Memory Lane</span>
-              <span>Tap to flip back</span>
-            </div>
-          </div>
-        </div>
-      `;
-
-      card.addEventListener("click", () => {
-        card.classList.toggle("flipped");
-        playSyntheticChime(600, 0.15);
-      });
-
-      polaroidGrid.appendChild(card);
-    });
-  }
-
-  renderPolaroids();
-
-  // ---------------------------------------------------------------------------
-  // 5. PAGE 4: 30 REASONS WHY I LOVE YOU
-  // ---------------------------------------------------------------------------
-  const reasonsGrid = document.getElementById("reasons-grid");
-  const revealedCountEl = document.getElementById("revealed-count");
-  const reasonsProgressBar = document.getElementById("reasons-progress-bar");
-  const revealAllBtn = document.getElementById("reveal-all-reasons-btn");
-
-  function renderReasons() {
-    if (!reasonsGrid || !cfg.reasons) return;
-    reasonsGrid.innerHTML = "";
-    revealedReasonsCount = 0;
-    updateReasonsProgress();
-
-    cfg.reasons.forEach((reasonText, idx) => {
-      const card = document.createElement("div");
-      card.className = "reason-card";
-
-      card.innerHTML = `
-        <div class="reason-card-inner">
-          <!-- FRONT -->
-          <div class="reason-front">
-            <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-bold font-mono mb-1">
-              ${idx + 1}
-            </div>
-            <span class="font-handwriting text-lg text-rose-600 font-bold">Open Me</span>
-            <span class="text-[10px] text-stone-400 mt-1">Tap card</span>
-          </div>
-
-          <!-- BACK -->
-          <div class="reason-back font-note">
-            <p class="font-semibold text-rose-700 text-xs mb-1">#${idx + 1}</p>
-            <p class="text-stone-700 text-sm leading-tight">${reasonText}</p>
-          </div>
-        </div>
-      `;
-
-      card.addEventListener("click", () => {
-        if (!card.classList.contains("revealed")) {
-          card.classList.add("revealed");
-          revealedReasonsCount++;
-          updateReasonsProgress();
-          playSyntheticChime(500 + revealedReasonsCount * 15, 0.2);
-
-          if (revealedReasonsCount === cfg.reasons.length) {
-            playCelebrationFanfare();
-            if (typeof confetti === "function") {
-              confetti({ particleCount: 100, spread: 80, origin: { y: 0.7 } });
-            }
-          }
-        } else {
-          card.classList.remove("revealed");
-          revealedReasonsCount = Math.max(0, revealedReasonsCount - 1);
-          updateReasonsProgress();
-        }
-      });
-
-      reasonsGrid.appendChild(card);
-    });
-  }
-
-  function updateReasonsProgress() {
-    if (revealedCountEl) revealedCountEl.textContent = revealedReasonsCount;
-    if (reasonsProgressBar && cfg.reasons) {
-      const pct = (revealedReasonsCount / cfg.reasons.length) * 100;
-      reasonsProgressBar.style.width = `${pct}%`;
-    }
-  }
-
-  if (revealAllBtn) {
-    revealAllBtn.addEventListener("click", () => {
-      const cards = document.querySelectorAll(".reason-card:not(.revealed)");
-      cards.forEach((c, idx) => {
-        setTimeout(() => {
-          c.classList.add("revealed");
-          revealedReasonsCount++;
-          updateReasonsProgress();
-          if (idx === cards.length - 1) {
-            playCelebrationFanfare();
-            if (typeof confetti === "function") {
-              confetti({ particleCount: 120, spread: 90 });
-            }
-          }
-        }, idx * 45);
-      });
-    });
-  }
-
-  renderReasons();
-
-  // ---------------------------------------------------------------------------
-  // 6. PAGE 5: THE SECRET LOVE LETTER & FINALE
-  // ---------------------------------------------------------------------------
-  function applyPersonalization() {
-    const name = cfg.girlfriendName || "My Love";
-    const nick = cfg.nickname || name;
-
-    const coverName = document.getElementById("cover-name");
-    const salutation = document.getElementById("letter-salutation");
-    const letterBody = document.getElementById("letter-body");
-    const signoff = document.getElementById("letter-signoff");
-    const signature = document.getElementById("letter-signature");
-
-    if (coverName) coverName.textContent = `${nick}!`;
-    if (salutation) {
-      salutation.textContent = cfg.letter?.salutation || `To My Dearest ${name},`;
-    }
-    if (letterBody && cfg.letter?.paragraphs) {
-      letterBody.innerHTML = cfg.letter.paragraphs
-        .map(p => `<p>${p}</p>`)
-        .join("");
-    }
-    if (signoff) {
-      signoff.textContent = cfg.letter?.signoff || "All my love, forever and always,";
-    }
-    if (signature) {
-      signature.textContent = cfg.letter?.signature || "Yours ❤️";
-    }
-  }
-
-  applyPersonalization();
-
-  const finalConfettiBtn = document.getElementById("final-confetti-btn");
-  if (finalConfettiBtn) {
-    finalConfettiBtn.addEventListener("click", () => {
-      playCelebrationFanfare();
-      if (typeof confetti === "function") {
-        confetti({
-          particleCount: 120,
-          spread: 100,
-          origin: { y: 0.5 }
-        });
-      }
-    });
-  }
-
-  // ---------------------------------------------------------------------------
-  // 7. QUICK CUSTOMIZER MODAL
+  // 6. QUICK CUSTOMIZER MODAL
   // ---------------------------------------------------------------------------
   const openCustomizerBtn = document.getElementById("open-customizer-btn");
   const closeCustomizerBtn = document.getElementById("close-customizer-btn");
@@ -797,11 +677,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const customizerModal = document.getElementById("customizer-modal");
   const quickCustomForm = document.getElementById("quick-custom-form");
   const inputName = document.getElementById("input-name");
-  const inputNickname = document.getElementById("input-nickname");
 
   function openModal() {
     if (inputName) inputName.value = cfg.girlfriendName || "";
-    if (inputNickname) inputNickname.value = cfg.nickname || "";
     if (customizerModal) customizerModal.classList.remove("hidden");
   }
 
@@ -816,14 +694,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (quickCustomForm) {
     quickCustomForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (inputName.value.trim()) cfg.girlfriendName = inputName.value.trim();
-      if (inputNickname.value.trim()) cfg.nickname = inputNickname.value.trim();
-      applyPersonalization();
+      if (inputName.value.trim()) {
+        cfg.girlfriendName = inputName.value.trim();
+        cfg.nickname = inputName.value.trim();
+      }
       closeModal();
       playCelebrationFanfare();
     });
   }
 
-  // Initialize Lucide Icons
   if (window.lucide) lucide.createIcons();
 });

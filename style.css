@@ -1,20 +1,22 @@
 /* ==============================================================================
-   SCRAPBOOK & POLAROID THEME STYLES
+   LUXURY KEEPSAKE BOOK DESIGN SYSTEM (MATCHING FIGMA SPEC)
    ============================================================================== */
 
 :root {
-  --bg-craft: #fcf8f2;
-  --cork-dot: #ebd8c3;
-  --accent-rose: #e07a7a;
-  --accent-blush: #f8d7da;
-  --accent-gold: #d4a373;
-  --paper-cream: #fffdfa;
-  --text-dark: #3a322d;
-  --text-muted: #796c64;
-  --tape-color-1: rgba(255, 209, 102, 0.65);
-  --tape-color-2: rgba(244, 162, 97, 0.6);
-  --tape-color-3: rgba(231, 111, 81, 0.55);
-  --tape-color-4: rgba(144, 190, 109, 0.6);
+  --bg-linen: #faf7f2;
+  --bg-card: #fffdfa;
+  --burgundy-deep: #7b1e28;
+  --burgundy-dark: #58141d;
+  --burgundy-light: #942935;
+  --blush-petal: #fbf2ed;
+  --blush-accent: #f8e7e4;
+  --gold-foil: #d4af37;
+  --gold-light: #f5df94;
+  --gold-dark: #b89228;
+  --text-charcoal: #2c2523;
+  --text-muted: #7d7471;
+  --border-cream: #ebd8c3;
+  --spine-ribbon: #6d1722;
 }
 
 * {
@@ -24,81 +26,78 @@
 body {
   margin: 0;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  color: var(--text-dark);
-  background-color: #f7efe5;
+  color: var(--text-charcoal);
+  background-color: var(--bg-linen);
   background-image: 
     radial-gradient(#ebd9c5 1.2px, transparent 1.2px), 
-    radial-gradient(#ebd9c5 1.2px, #f7efe5 1.2px);
+    radial-gradient(#ebd9c5 1.2px, #faf7f2 1.2px);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
   overflow-x: hidden;
   min-height: 100vh;
 }
 
-/* Handwritten cursive classes */
-.font-handwriting {
+/* Typography Helpers */
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.font-script {
+  font-family: 'Great Vibes', cursive;
+}
+.font-cursive-note {
   font-family: 'Caveat', cursive;
 }
-.font-note {
-  font-family: 'Patrick Hand', cursive;
-}
-.font-serif-title {
-  font-family: 'Playfair Display', serif;
+.font-serif-quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
 /* -----------------------------------------------------------------------------
-   CARD BOOK & MULTI-PAGE STYLING
+   KEEPSAKE BOOK SPREAD ARCHITECTURE
    ----------------------------------------------------------------------------- */
-.card-book-wrapper {
+.book-wrapper {
   position: relative;
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
-  perspective: 1500px;
+  max-width: 1100px;
+  margin: 10px auto 40px auto;
+  perspective: 1600px;
 }
 
-.card-book {
-  position: relative;
-  width: 100%;
-  min-height: 620px;
-  background: transparent;
-  border-radius: 28px;
-}
-
-.card-page {
+.book-spread {
   display: none;
   width: 100%;
-  min-height: 620px;
-  background: #fffdfa;
-  border-radius: 28px;
+  min-height: 640px;
+  background: var(--bg-card);
+  border-radius: 24px;
   box-shadow: 
-    0 20px 40px -10px rgba(50, 40, 30, 0.14),
+    0 25px 60px -15px rgba(44, 25, 20, 0.22),
     0 1px 3px rgba(0, 0, 0, 0.05),
-    0 0 0 1px rgba(220, 205, 185, 0.6);
-  padding: 32px 24px;
+    0 0 0 1px rgba(212, 175, 55, 0.35);
+  position: relative;
+  overflow: hidden;
   opacity: 0;
-  transform: translateX(40px) scale(0.98);
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(35px) scale(0.98);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (min-width: 640px) {
-  .card-page {
-    padding: 44px 40px;
+.book-spread.active {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  animation: spreadFlipIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (min-width: 860px) {
+  .book-spread.active {
+    flex-direction: row;
   }
 }
 
-.card-page.active {
-  display: block;
-  opacity: 1;
-  transform: translateX(0) scale(1);
-  animation: pageTurnIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pageTurnIn {
+@keyframes spreadFlipIn {
   from {
     opacity: 0;
-    transform: translateX(35px) scale(0.97);
+    transform: translateX(40px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -106,294 +105,302 @@ body {
   }
 }
 
-/* Page Navigation Pill Bar */
-.page-nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 920px;
-  margin: 20px auto 0 auto;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(220, 205, 185, 0.6);
-  border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+/* Center Bound Spine Ribbon (Desktop) */
+.spine-crease {
+  display: none;
+}
+@media (min-width: 860px) {
+  .spine-crease {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 24px;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, 
+      rgba(0,0,0,0.08) 0%, 
+      rgba(0,0,0,0.02) 20%, 
+      rgba(255,255,255,0.4) 50%, 
+      rgba(0,0,0,0.02) 80%, 
+      rgba(0,0,0,0.08) 100%);
+    z-index: 40;
+    pointer-events: none;
+  }
+  .spine-crease::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    transform: translateX(-50%);
+    background: var(--burgundy-deep);
+    opacity: 0.6;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  }
 }
 
-.nav-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #e2d4c0;
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.nav-dot.active {
-  background: #e07a7a;
-  transform: scale(1.35);
-  box-shadow: 0 0 8px rgba(224, 122, 122, 0.6);
-}
-
-/* Corner page fold dog-ear hint */
-.card-dogear {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 35px 35px;
-  border-color: transparent transparent #ebd8c3 transparent;
-  border-radius: 0 0 28px 0;
-  cursor: pointer;
-  transition: border-width 0.2s ease;
-}
-
-.card-dogear:hover {
-  border-width: 0 0 45px 45px;
-}
-.washi-tape {
-  position: absolute;
-  height: 28px;
-  width: 110px;
-  background-color: var(--tape-color-1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  z-index: 10;
-  opacity: 0.85;
-  backdrop-filter: blur(2px);
-  transform-origin: center;
-}
-.washi-tape::before,
-.washi-tape::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background-image: radial-gradient(circle, transparent 3px, rgba(0,0,0,0.06) 3px);
-  background-size: 6px 6px;
-}
-.washi-tape::before { left: -3px; }
-.washi-tape::after { right: -3px; }
-
-.tape-top-center {
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-1deg);
-}
-.tape-top-left {
-  top: -12px;
-  left: 10px;
-  transform: rotate(-8deg);
-  background-color: var(--tape-color-2);
-}
-.tape-top-right {
-  top: -12px;
-  right: 10px;
-  transform: rotate(8deg);
-  background-color: var(--tape-color-3);
-}
-
-/* -----------------------------------------------------------------------------
-   PIN EFFECT
-   ----------------------------------------------------------------------------- */
-.pushpin {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ff7b72, #bd1b26);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25), inset 0 2px 3px rgba(255, 255, 255, 0.6);
-  z-index: 20;
-}
-.pushpin::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 6px;
-  background: #777;
-}
-
-/* -----------------------------------------------------------------------------
-   POLAROID STYLING
-   ----------------------------------------------------------------------------- */
-.polaroid-card {
-  perspective: 1000px;
-  cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-}
-
-.polaroid-inner {
+/* Facing Pages */
+.book-page-left,
+.book-page-right {
+  flex: 1;
+  padding: 32px 24px;
   position: relative;
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  padding: 14px 14px 38px 14px;
-  border-radius: 4px;
-  box-shadow: 0 10px 25px -5px rgba(50, 40, 30, 0.15), 0 5px 10px -5px rgba(50, 40, 30, 0.1);
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
 }
 
-.polaroid-card:hover {
-  transform: scale(1.04) translateY(-6px) !important;
-  z-index: 30;
+@media (min-width: 640px) {
+  .book-page-left,
+  .book-page-right {
+    padding: 44px 38px;
+  }
 }
 
-.polaroid-card.flipped .polaroid-inner {
-  transform: rotateY(180deg);
+@media (min-width: 860px) {
+  .book-page-left {
+    border-right: 1px solid rgba(220, 205, 185, 0.5);
+  }
 }
 
-.polaroid-front,
-.polaroid-back {
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.polaroid-back {
+/* Corner Gold Brackets */
+.gold-corner-tl {
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 24px;
-  background: #fffdf7;
-  transform: rotateY(180deg);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border: 1px dashed #e2d4c0;
+  top: 14px;
+  left: 14px;
+  width: 22px;
+  height: 22px;
+  border-top: 2px solid var(--gold-foil);
+  border-left: 2px solid var(--gold-foil);
+  pointer-events: none;
 }
-
-.polaroid-img-wrapper {
-  width: 100%;
-  height: 230px;
-  overflow: hidden;
-  background-color: #f0ebe4;
-  border-radius: 2px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.08);
+.gold-corner-tr {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  border-top: 2px solid var(--gold-foil);
+  border-right: 2px solid var(--gold-foil);
+  pointer-events: none;
 }
-
-.polaroid-img-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+.gold-corner-bl {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  width: 22px;
+  height: 22px;
+  border-bottom: 2px solid var(--gold-foil);
+  border-left: 2px solid var(--gold-foil);
+  pointer-events: none;
 }
-
-.polaroid-card:hover .polaroid-img-wrapper img {
-  transform: scale(1.05);
-}
-
-/* -----------------------------------------------------------------------------
-   ENVELOPE OPENING OVERLAY
-   ----------------------------------------------------------------------------- */
-#envelope-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: radial-gradient(circle at center, #352520, #1c1310);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-#envelope-gate.opened {
-  opacity: 0;
-  visibility: hidden;
+.gold-corner-br {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  border-bottom: 2px solid var(--gold-foil);
+  border-right: 2px solid var(--gold-foil);
   pointer-events: none;
 }
 
-.wax-seal {
-  width: 80px;
-  height: 80px;
+/* Silk Ribbon Bookmark hanging from top */
+.ribbon-bookmark {
+  position: absolute;
+  top: 0;
+  left: 45px;
+  width: 26px;
+  height: 85px;
+  background: var(--burgundy-deep);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 45;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  transition: transform 0.3s ease;
+}
+.ribbon-bookmark:hover {
+  transform: translateY(6px);
+}
+
+/* -----------------------------------------------------------------------------
+   WAX SEALS (BURGUNDY & GOLD ACCENTS)
+   ----------------------------------------------------------------------------- */
+.wax-seal-burgundy {
+  width: 78px;
+  height: 78px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #e63946, #9b1d20);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  background: radial-gradient(circle at 35% 35%, #9e2a3b, #61111d);
+  box-shadow: 
+    0 8px 20px rgba(97, 17, 29, 0.45), 
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    0 0 0 3px rgba(212, 175, 55, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
   position: relative;
   z-index: 50;
-  border: 3px solid rgba(255, 255, 255, 0.15);
+}
+.wax-seal-burgundy:hover {
+  transform: scale(1.1) rotate(4deg);
+  box-shadow: 0 12px 28px rgba(97, 17, 29, 0.6);
 }
 
-.wax-seal:hover {
-  transform: scale(1.12) rotate(4deg);
-  box-shadow: 0 8px 24px rgba(230, 57, 70, 0.5);
-}
-
-.wax-seal::before {
-  content: "30";
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  font-weight: 700;
-  color: #ffccd5;
-  text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(255, 255, 255, 0.3);
+.wax-seal-sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #9e2a3b, #61111d);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fceae6;
+  font-size: 14px;
 }
 
 /* -----------------------------------------------------------------------------
-   3D CYLINDRICAL CAKE & STAGE
+   POLAROIDS & FILMSTRIP CARDS
+   ----------------------------------------------------------------------------- */
+.polaroid-keepsake {
+  background: #fff;
+  padding: 12px 12px 28px 12px;
+  border-radius: 4px;
+  box-shadow: 0 12px 28px -6px rgba(45, 30, 20, 0.16), 0 4px 10px -2px rgba(45, 30, 20, 0.08);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.polaroid-keepsake:hover {
+  transform: scale(1.03) translateY(-4px) !important;
+  box-shadow: 0 18px 36px -8px rgba(45, 30, 20, 0.22);
+  z-index: 30;
+}
+
+.washi-tape-burgundy {
+  position: absolute;
+  height: 24px;
+  width: 90px;
+  background-color: rgba(123, 30, 40, 0.7);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+.washi-tape-gold {
+  position: absolute;
+  height: 24px;
+  width: 90px;
+  background-color: rgba(212, 175, 55, 0.65);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+
+/* -----------------------------------------------------------------------------
+   SCRATCH CARDS (GOLD & ROSE FOIL)
+   ----------------------------------------------------------------------------- */
+.scratch-card-container {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(45, 30, 20, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: #fff;
+}
+
+.scratch-secret-content {
+  padding: 22px 18px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, #fffcf9 0%, #fef2f2 100%);
+}
+
+.scratch-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  z-index: 10;
+  transition: opacity 0.5s ease;
+}
+
+/* -----------------------------------------------------------------------------
+   KEEPSAKE MINI ENVELOPES
+   ----------------------------------------------------------------------------- */
+.mini-envelope-card {
+  background: var(--blush-petal);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 16px;
+  padding: 18px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+.mini-envelope-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(123, 30, 40, 0.1);
+}
+
+/* -----------------------------------------------------------------------------
+   3D CYLINDRICAL CAKE & AMBIENT HALO GLOW
    ----------------------------------------------------------------------------- */
 .cake-stage-3d {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  margin: 15px auto 25px auto;
+  max-width: 380px;
+  margin: 15px auto 20px auto;
   perspective: 1100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Radiant Golden Halo behind cake */
+.cake-halo-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(254, 240, 199, 0.75) 0%, rgba(254, 215, 170, 0.35) 45%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .cake-3d {
   position: relative;
-  width: 360px;
+  width: 330px;
   display: flex;
   flex-direction: column;
   align-items: center;
   transform-style: preserve-3d;
   transform: rotateX(10deg);
   transition: transform 0.15s ease-out;
-}
-
-/* 3D Tier Architecture */
-.cake-tier {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   z-index: 10;
 }
 
-/* Tier 1 (Top Tier - Strawberry Rose) */
+/* Tier 1 (Top - White & Gold Sparkles) */
 .tier-1 {
-  width: 210px;
+  width: 190px;
   z-index: 30;
   margin-bottom: -15px;
 }
 .tier-1 .tier-top {
-  width: 210px;
-  height: 60px;
+  width: 190px;
+  height: 56px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 40% 35%, #fff0f3 0%, #fbc2cb 50%, #e28898 100%);
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -3px 6px rgba(0, 0, 0, 0.12);
+  background: radial-gradient(ellipse at 40% 35%, #ffffff 0%, #fff7ed 50%, #fed7aa 100%);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 2;
   display: flex;
@@ -401,42 +408,42 @@ body {
   justify-content: center;
 }
 .tier-1 .tier-body {
-  width: 210px;
-  height: 55px;
-  margin-top: -30px;
-  border-radius: 0 0 50% 50% / 0 0 30px 30px;
-  background: linear-gradient(to right, #b8495d 0%, #d8687d 20%, #fcaab7 45%, #ffb3c0 55%, #df7084 80%, #9e364a 100%);
-  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.25), 0 8px 12px rgba(0, 0, 0, 0.1);
+  width: 190px;
+  height: 52px;
+  margin-top: -28px;
+  border-radius: 0 0 50% 50% / 0 0 28px 28px;
+  background: linear-gradient(to right, #d49b6a 0%, #fcd34d 25%, #ffffff 50%, #fcd34d 75%, #b45309 100%);
+  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.22), 0 8px 12px rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 1;
 }
 
-/* Tier 2 (Middle Tier - Champagne Gold) */
+/* Tier 2 (Middle - Blush Rose & Sweet Wishes) */
 .tier-2 {
-  width: 275px;
+  width: 250px;
   z-index: 20;
-  margin-bottom: -20px;
+  margin-bottom: -18px;
 }
 .tier-2 .tier-top {
-  width: 275px;
-  height: 72px;
+  width: 250px;
+  height: 68px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 40% 35%, #fffcf5 0%, #fbe8c3 50%, #d8b06c 100%);
-  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.9), inset 0 -4px 8px rgba(0, 0, 0, 0.15);
+  background: radial-gradient(ellipse at 40% 35%, #fff0f3 0%, #fbc2cb 50%, #e28898 100%);
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.9), inset 0 -4px 8px rgba(0, 0, 0, 0.12);
   position: relative;
   z-index: 2;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
 }
 .tier-2 .tier-body {
-  width: 275px;
-  height: 65px;
-  margin-top: -36px;
-  border-radius: 0 0 50% 50% / 0 0 36px 36px;
-  background: linear-gradient(to right, #9e732e 0%, #c49646 20%, #fae29f 45%, #fff1ba 55%, #cfa352 80%, #875e1e 100%);
-  box-shadow: inset 0 -8px 14px rgba(0, 0, 0, 0.3), 0 10px 18px rgba(0, 0, 0, 0.12);
+  width: 250px;
+  height: 60px;
+  margin-top: -34px;
+  border-radius: 0 0 50% 50% / 0 0 34px 34px;
+  background: linear-gradient(to right, #9e364a 0%, #df7084 20%, #fcaab7 45%, #ffb3c0 55%, #df7084 80%, #7b1e28 100%);
+  box-shadow: inset 0 -8px 14px rgba(0, 0, 0, 0.28), 0 10px 18px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
   display: flex;
@@ -444,27 +451,27 @@ body {
   justify-content: center;
 }
 
-/* Tier 3 (Base Tier - Velvet Crimson) */
+/* Tier 3 (Base - White with Scalloped Icing Piping) */
 .tier-3 {
-  width: 340px;
+  width: 310px;
   z-index: 10;
 }
 .tier-3 .tier-top {
-  width: 340px;
-  height: 84px;
+  width: 310px;
+  height: 78px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 40% 35%, #ffe6eb 0%, #f89fb0 50%, #c65369 100%);
-  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.9), inset 0 -5px 10px rgba(0, 0, 0, 0.2);
+  background: radial-gradient(ellipse at 40% 35%, #ffffff 0%, #fff1f2 50%, #fecdd3 100%);
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.9), inset 0 -5px 10px rgba(0, 0, 0, 0.15);
   position: relative;
   z-index: 2;
 }
 .tier-3 .tier-body {
-  width: 340px;
-  height: 75px;
-  margin-top: -42px;
-  border-radius: 0 0 50% 50% / 0 0 42px 42px;
-  background: linear-gradient(to right, #872033 0%, #ad3a4f 20%, #f4798f 45%, #ff8e9f 55%, #b54056 80%, #6e1324 100%);
-  box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.35), 0 14px 22px rgba(0, 0, 0, 0.15);
+  width: 310px;
+  height: 68px;
+  margin-top: -39px;
+  border-radius: 0 0 50% 50% / 0 0 39px 39px;
+  background: linear-gradient(to right, #9f1239 0%, #e11d48 20%, #fda4af 45%, #fff1f2 55%, #fb7185 80%, #881337 100%);
+  box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.3), 0 14px 22px rgba(0, 0, 0, 0.12);
   position: relative;
   z-index: 1;
   display: flex;
@@ -472,106 +479,71 @@ body {
   justify-content: center;
 }
 
-/* Frosting Drips on Tier 1 */
-.drip-row {
-  position: absolute;
-  top: 24px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-around;
-  pointer-events: none;
-}
-.drip {
-  width: 14px;
-  height: 18px;
-  background: #fff;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
-}
-.drip-sm { height: 12px; width: 10px; }
-.drip-lg { height: 24px; width: 16px; }
-
-/* 3D Cake Stand / Pedestal */
+/* Cake Stand */
 .cake-stand-3d {
-  width: 370px;
+  width: 340px;
   position: relative;
   z-index: 5;
-  margin-top: -30px;
+  margin-top: -26px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .stand-platter {
-  width: 370px;
-  height: 52px;
+  width: 340px;
+  height: 48px;
   border-radius: 50%;
-  background: linear-gradient(to right, #8c8c8c 0%, #c4c4c4 20%, #ffffff 50%, #dedede 75%, #7a7a7a 100%);
-  box-shadow: 0 16px 30px rgba(45, 30, 20, 0.28), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  background: linear-gradient(to right, #8c8c8c 0%, #d4af37 25%, #ffffff 50%, #d4af37 75%, #7a7a7a 100%);
+  box-shadow: 0 16px 30px rgba(45, 30, 20, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.9);
 }
 .stand-pillar {
-  width: 55px;
-  height: 25px;
-  margin-top: -16px;
-  background: linear-gradient(to right, #707070, #c0c0c0 40%, #ffffff 60%, #858585);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  width: 50px;
+  height: 22px;
+  margin-top: -14px;
+  background: linear-gradient(to right, #707070, #d4af37 40%, #ffffff 60%, #858585);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.22);
 }
 .stand-base {
-  width: 190px;
-  height: 38px;
+  width: 170px;
+  height: 34px;
   border-radius: 50%;
-  margin-top: -12px;
-  background: linear-gradient(to right, #6b6b6b, #b5b5b5 30%, #ffffff 55%, #757575);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+  margin-top: -10px;
+  background: linear-gradient(to right, #6b6b6b, #c5a059 30%, #ffffff 55%, #757575);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.3);
 }
 
-/* 3D Candles Array On Cake Top */
+/* 30 Candles Rack on Top */
 .candles-rack-3d {
   position: absolute;
-  top: -26px;
+  top: -24px;
   left: 50%;
   transform: translateX(-50%);
-  width: 190px;
-  height: 54px;
+  width: 175px;
+  height: 50px;
   z-index: 50;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 4px 6px;
-  pointer-events: auto;
+  gap: 3px 5px;
 }
 
 .single-candle {
   width: 5px;
-  height: 26px;
+  height: 24px;
   border-radius: 3px;
   background: repeating-linear-gradient(
     45deg,
-    #ffb703,
-    #ffb703 3px,
-    #fb8500 3px,
-    #fb8500 6px
+    #d4af37,
+    #d4af37 3px,
+    #80182a 3px,
+    #80182a 6px
   );
   position: relative;
   cursor: pointer;
   transition: transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
 }
-
-.single-candle::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: -2px;
-  width: 9px;
-  height: 4px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: -1;
-}
-
 .single-candle:hover {
   transform: scale(1.3) translateY(-2px);
   z-index: 60;
@@ -579,11 +551,11 @@ body {
 
 .candle-flame {
   position: absolute;
-  top: -14px;
+  top: -13px;
   left: 50%;
   transform: translateX(-50%);
-  width: 10px;
-  height: 16px;
+  width: 9px;
+  height: 15px;
   background: radial-gradient(ellipse at bottom, #fff75e 0%, #ff8c00 60%, transparent 80%);
   border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
   box-shadow: 0 0 10px #ffb703, 0 0 20px #ff8c00;
@@ -615,7 +587,6 @@ body {
   opacity: 0;
   pointer-events: none;
 }
-
 .single-candle.blown .smoke-puff {
   animation: smokeRise 1.5s forwards ease-out;
 }
@@ -627,106 +598,51 @@ body {
 }
 
 @keyframes smokeRise {
-  0% {
-    opacity: 0.8;
-    transform: translateX(-50%) scale(0.8);
-  }
-  50% {
-    opacity: 0.5;
-    transform: translateX(-60%) translateY(-20px) scale(1.6);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-40%) translateY(-40px) scale(2.4);
-  }
+  0% { opacity: 0.8; transform: translateX(-50%) scale(0.8); }
+  50% { opacity: 0.5; transform: translateX(-60%) translateY(-20px) scale(1.6); }
+  100% { opacity: 0; transform: translateX(-40%) translateY(-40px) scale(2.4); }
 }
 
 /* -----------------------------------------------------------------------------
-   30 REASONS FLIP / SCRATCH CARDS
+   PAGE NAVIGATION BAR (BOTTOM)
    ----------------------------------------------------------------------------- */
-.reason-card {
-  perspective: 800px;
-  cursor: pointer;
-}
-
-.reason-card-inner {
-  position: relative;
-  width: 100%;
-  height: 130px;
-  border-radius: 12px;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.reason-card.revealed .reason-card-inner {
-  transform: rotateY(180deg);
-}
-
-.reason-front,
-.reason-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 12px;
+.page-nav-bar {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-}
-
-.reason-front {
-  background: #fff;
-  border: 2px dashed #f4c2c2;
-  color: #c94a53;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.reason-front:hover {
-  background-color: #fff5f5;
-  transform: translateY(-2px);
-}
-
-.reason-back {
-  background: linear-gradient(135deg, #fffcf9 0%, #fff0f0 100%);
-  border: 1.5px solid #f8c0c8;
-  transform: rotateY(180deg);
-  text-align: center;
-  font-size: 13px;
-  line-height: 1.45;
-  color: #4a342c;
-  overflow-y: auto;
-}
-
-/* -----------------------------------------------------------------------------
-   PARCHMENT LETTER
-   ----------------------------------------------------------------------------- */
-.parchment-letter {
-  background: #fffdf7;
-  background-image: 
-    linear-gradient(#f1e6d4 1px, transparent 1px);
-  background-size: 100% 32px;
-  line-height: 32px;
-  box-shadow: 
-    0 1px 3px rgba(0,0,0,0.06), 
-    0 15px 35px -5px rgba(50, 40, 30, 0.12),
-    0 0 0 1px rgba(220, 205, 185, 0.6);
-  border-radius: 8px;
-}
-
-/* -----------------------------------------------------------------------------
-   FLOATING MUSIC PLAYER
-   ----------------------------------------------------------------------------- */
-.music-widget {
-  position: fixed;
-  bottom: 80px;
-  right: 16px;
-  z-index: 999;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 16px auto 0 auto;
+  padding: 8px 18px;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(220, 205, 185, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50px;
+  box-shadow: 0 8px 25px rgba(45, 30, 20, 0.12);
+}
+
+.nav-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e2d4c0;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.nav-dot.active {
+  background: var(--burgundy-deep);
+  transform: scale(1.4);
+  box-shadow: 0 0 8px rgba(123, 30, 40, 0.6);
+}
+
+/* Floating Audio Widget */
+.music-widget {
+  position: fixed;
+  bottom: 84px;
+  right: 16px;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.5);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   border-radius: 50px;
   padding: 6px 14px 6px 8px;
@@ -745,36 +661,33 @@ body {
   }
 }
 
-.music-widget:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
-}
-
 .vinyl-disc {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: radial-gradient(circle, #ffccd5 18%, #1f1f1f 19%, #3a3a3a 45%, #1f1f1f 48%, #4a4a4a 80%, #111 100%);
+  background: radial-gradient(circle, #fceae6 18%, #1f1f1f 19%, #3a3a3a 45%, #1f1f1f 48%, #4a4a4a 80%, #111 100%);
   position: relative;
 }
-
 .spinning {
   animation: spin 3.5s linear infinite;
 }
-
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Equalizer waves animation */
+.eq-bar {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--burgundy-deep);
+  border-radius: 2px;
+  animation: eqBounce 0.8s ease-in-out infinite alternate;
 }
-::-webkit-scrollbar-track {
-  background: #f7efe5;
-}
-::-webkit-scrollbar-thumb {
-  background: #d4a373;
-  border-radius: 4px;
+.eq-bar:nth-child(2) { animation-delay: 0.2s; height: 16px; }
+.eq-bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
+@keyframes eqBounce {
+  from { transform: scaleY(0.4); }
+  to { transform: scaleY(1.2); }
 }
