@@ -1,32 +1,50 @@
 // ==============================================================================
-// 💖 30TH BIRTHDAY CARD APPLICATION LOGIC
+// 💖 30TH BIRTHDAY CARD APPLICATION LOGIC (MULTI-PAGE & EARLY MIC)
 // ==============================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
   const cfg = window.BIRTHDAY_CONFIG || {};
 
-  // State
+  // ---------------------------------------------------------------------------
+  // STATE MANAGEMENT
+  // ---------------------------------------------------------------------------
+  let currentPage = 1;
+  const totalPages = 5;
+  const pageTitles = [
+    "The Cover",
+    "The Birthday Cake",
+    "Memory Scrapbook",
+    "30 Reasons",
+    "The Love Letter"
+  ];
+
   let audioPlaying = false;
   let audioContext = null;
   let blownCandlesCount = 0;
   const totalCandles = 30;
   let revealedReasonsCount = 0;
 
-  // Audio Elements
+  // Microphone state
+  let micStream = null;
+  let micAudioContext = null;
+  let micAnalyser = null;
+  let micAnimId = null;
+  let isListeningToMic = false;
+  let breathAccumulator = 0;
+  let micPermissionRequested = false;
+
+  // ---------------------------------------------------------------------------
+  // AUDIO & SYNTHESIZER
+  // ---------------------------------------------------------------------------
   const bgAudio = document.getElementById("bg-audio");
   const toggleMusicBtn = document.getElementById("toggle-music-btn");
   const musicIcon = document.getElementById("music-icon");
   const vinylDisc = document.getElementById("vinyl-disc");
   const musicTitleEl = document.getElementById("music-title");
 
-  if (cfg.musicUrl) {
-    bgAudio.src = cfg.musicUrl;
-  }
-  if (cfg.musicTitle && musicTitleEl) {
-    musicTitleEl.textContent = cfg.musicTitle;
-  }
+  if (cfg.musicUrl) bgAudio.src = cfg.musicUrl;
+  if (cfg.musicTitle && musicTitleEl) musicTitleEl.textContent = cfg.musicTitle;
 
-  // Web Audio Chime Generator (Guaranteed sound even if remote MP3 is blocked)
   function playSyntheticChime(freq = 523.25, duration = 0.8) {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -36,11 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const osc = audioContext.createOscillator();
       const gain = audioContext.createGain();
-
       osc.type = "sine";
       osc.frequency.setValueAtTime(freq, audioContext.currentTime);
 
-      gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+      gain.gain.setValueAtTime(0.12, audioContext.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
 
       osc.connect(gain);
@@ -49,26 +66,25 @@ document.addEventListener("DOMContentLoaded", () => {
       osc.start();
       osc.stop(audioContext.currentTime + duration);
     } catch (e) {
-      console.warn("Audio chime unsupported:", e);
+      console.warn("Audio chime error:", e);
     }
   }
 
   function playCelebrationFanfare() {
-    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C E G C E G
+    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
     notes.forEach((freq, idx) => {
       setTimeout(() => playSyntheticChime(freq, 1.2), idx * 120);
     });
   }
 
-  // Audio Play/Pause Controller
   function startMusic() {
     if (!audioPlaying) {
       bgAudio.play().then(() => {
         audioPlaying = true;
-        vinylDisc.classList.add("spinning");
+        if (vinylDisc) vinylDisc.classList.add("spinning");
         updateMusicIcon(true);
       }).catch(err => {
-        console.log("Audio autoplay prevented, ready on click:", err);
+        console.log("Audio autoplay prevented, ready on gesture:", err);
       });
     }
   }
@@ -77,16 +93,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (audioPlaying) {
       bgAudio.pause();
       audioPlaying = false;
-      vinylDisc.classList.remove("spinning");
+      if (vinylDisc) vinylDisc.classList.remove("spinning");
       updateMusicIcon(false);
     } else {
       bgAudio.play().then(() => {
         audioPlaying = true;
-        vinylDisc.classList.add("spinning");
+        if (vinylDisc) vinylDisc.classList.add("spinning");
         updateMusicIcon(true);
-      }).catch(err => {
-        console.warn("Playback error:", err);
-      });
+      }).catch(err => console.warn(err));
     }
   }
 
@@ -97,93 +111,227 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (toggleMusicBtn) {
-    toggleMusicBtn.addEventListener("click", toggleMusic);
-  }
+  if (toggleMusicBtn) toggleMusicBtn.addEventListener("click", toggleMusic);
 
-  // ===========================================================================
-  // 1. POPULATE INITIAL CONTENT FROM CONFIG
-  // ===========================================================================
-  function applyPersonalization() {
-    const name = cfg.girlfriendName || "My Love";
-    const nick = cfg.nickname || name;
+  // ---------------------------------------------------------------------------
+  // 1. EARLY MICROPHONE PERMISSION REQUEST (UPON WEBSITE OPEN)
+  // ---------------------------------------------------------------------------
+  async function requestMicPermissionEarly() {
+    if (micPermissionRequested) return;
+    micPermissionRequested = true;
 
-    const gateName = document.getElementById("gate-recipient-name");
-    const heroName = document.getElementById("hero-name");
-    const salutation = document.getElementById("letter-salutation");
-    const letterBody = document.getElementById("letter-body");
-    const signoff = document.getElementById("letter-signoff");
-    const signature = document.getElementById("letter-signature");
-
-    if (gateName) gateName.textContent = `${name} ✨`;
-    if (heroName) heroName.textContent = `${nick}!`;
-
-    // Love Letter
-    if (salutation) {
-      salutation.textContent = cfg.letter?.salutation || `To My Dearest ${name},`;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.warn("Microphone access not supported on this browser.");
+      return;
     }
-    if (letterBody && cfg.letter?.paragraphs) {
-      letterBody.innerHTML = cfg.letter.paragraphs
-        .map(p => `<p>${p}</p>`)
-        .join("");
+
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!micAudioContext && AudioCtx) {
+      micAudioContext = new AudioCtx();
     }
-    if (signoff) {
-      signoff.textContent = cfg.letter?.signoff || "All my love, forever and always,";
-    }
-    if (signature) {
-      signature.textContent = cfg.letter?.signature || "Yours ❤️";
-    }
-  }
 
-  applyPersonalization();
+    const audioConstraints = {
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
+      },
+      video: false
+    };
 
-  // ===========================================================================
-  // 2. ENVELOPE GATE UNSEALING
-  // ===========================================================================
-  const breakSealBtn = document.getElementById("break-seal-btn");
-  const envelopeGate = document.getElementById("envelope-gate");
+    try {
+      // Prompt browser permission immediately
+      micStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+      console.log("Microphone access pre-authorized successfully!");
 
-  if (breakSealBtn && envelopeGate) {
-    breakSealBtn.addEventListener("click", () => {
-      // Sound chime
-      playCelebrationFanfare();
-
-      // Confetti burst
-      if (typeof confetti === "function") {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+      // If user is already on Cake page or moves to it, connect immediately
+      if (currentPage === 2) {
+        setupAndStartMic();
       }
+    } catch (err) {
+      console.log("Early mic request waiting for interaction or basic constraints:", err);
+      // Fallback: try on first user click anywhere
+      window.addEventListener("pointerdown", () => {
+        if (!micStream) {
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
+            micStream = s;
+            if (currentPage === 2) setupAndStartMic();
+          }).catch(e => console.warn("Mic denied:", e));
+        }
+        if (micAudioContext && micAudioContext.state === "suspended") {
+          micAudioContext.resume();
+        }
+      }, { once: true });
+    }
+  }
 
-      // Try autoplay music
-      startMusic();
+  // Request mic permission on page load
+  requestMicPermissionEarly();
 
-      // Animate gate removal
-      envelopeGate.classList.add("opened");
+  // Resume AudioContext on first touch/click anywhere
+  window.addEventListener("pointerdown", () => {
+    if (micAudioContext && micAudioContext.state === "suspended") {
+      micAudioContext.resume();
+    }
+    startMusic();
+  }, { once: true });
+
+  // ---------------------------------------------------------------------------
+  // 2. MULTI-PAGE CARD BOOK NAVIGATION (GESTURES, TAPS, ARROWS)
+  // ---------------------------------------------------------------------------
+  const cardPages = document.querySelectorAll(".card-page");
+  const prevPageBtn = document.getElementById("prev-page-btn");
+  const nextPageBtn = document.getElementById("next-page-btn");
+  const pageTitleLabel = document.getElementById("page-title-label");
+  const navDots = document.querySelectorAll(".nav-dot");
+  const cardBook = document.getElementById("card-book");
+
+  function goToPage(pageIndex) {
+    if (pageIndex < 1 || pageIndex > totalPages) return;
+    currentPage = pageIndex;
+
+    // Update active page
+    cardPages.forEach((page) => {
+      const pageNum = parseInt(page.dataset.page, 10);
+      if (pageNum === currentPage) {
+        page.classList.add("active");
+      } else {
+        page.classList.remove("active");
+      }
+    });
+
+    // Update nav label & dots
+    if (pageTitleLabel) {
+      pageTitleLabel.textContent = `Page ${currentPage} of ${totalPages}: ${pageTitles[currentPage - 1]}`;
+    }
+
+    navDots.forEach((dot) => {
+      const target = parseInt(dot.dataset.pageTarget, 10);
+      if (target === currentPage) {
+        dot.classList.add("active");
+      } else {
+        dot.classList.remove("active");
+      }
+    });
+
+    // Update Prev / Next buttons disabled states
+    if (prevPageBtn) prevPageBtn.disabled = (currentPage === 1);
+    if (nextPageBtn) nextPageBtn.disabled = (currentPage === totalPages);
+
+    // Scroll smoothly to top of card container on mobile
+    if (cardBook) {
+      const yOffset = -20;
+      const y = cardBook.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    }
+
+    // Play subtle page turn chime
+    playSyntheticChime(400 + currentPage * 40, 0.15);
+
+    // If navigated to Page 2 (Cake), automatically activate microphone listening!
+    if (currentPage === 2) {
+      if (blownCandlesCount < totalCandles) {
+        setupAndStartMic();
+      }
+    } else {
+      // Pause mic processing on other pages to preserve CPU/battery
+      pauseMicListening();
+    }
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages) goToPage(currentPage + 1);
+  }
+
+  function prevPage() {
+    if (currentPage > 1) goToPage(currentPage - 1);
+  }
+
+  if (nextPageBtn) nextPageBtn.addEventListener("click", nextPage);
+  if (prevPageBtn) prevPageBtn.addEventListener("click", prevPage);
+
+  // Clickable Navigation Dots
+  navDots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const target = parseInt(dot.dataset.pageTarget, 10);
+      if (target) goToPage(target);
+    });
+  });
+
+  // "Next Page" in-content action buttons
+  document.querySelectorAll(".next-page-trigger").forEach((btn) => {
+    btn.addEventListener("click", nextPage);
+  });
+
+  // Cover Wax Seal open button
+  const coverOpenBtn = document.getElementById("cover-open-btn");
+  if (coverOpenBtn) {
+    coverOpenBtn.addEventListener("click", () => {
+      playCelebrationFanfare();
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+      }
+      goToPage(2);
     });
   }
 
-  // ===========================================================================
-  // 3. INTERACTIVE 30 CANDLES CAKE (WITH HIGH-SENSITIVITY REAL MIC BLOW DETECTION)
-  // ===========================================================================
+  // Final page "Read Again" button
+  const backToCoverBtn = document.getElementById("back-to-cover-btn");
+  if (backToCoverBtn) {
+    backToCoverBtn.addEventListener("click", () => goToPage(1));
+  }
+
+  // Keyboard navigation (Arrow keys)
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "PageDown") nextPage();
+    if (e.key === "ArrowLeft" || e.key === "PageUp") prevPage();
+  });
+
+  // ---------------------------------------------------------------------------
+  // TOUCH / SWIPE GESTURES FOR PAGE TURNING
+  // ---------------------------------------------------------------------------
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  if (cardBook) {
+    cardBook.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    cardBook.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }, { passive: true });
+  }
+
+  function handleSwipe() {
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+
+    // Horizontal swipe threshold: 45px, dominant over vertical scroll
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+      if (diffX < 0) {
+        nextPage(); // Swiped left -> next page
+      } else {
+        prevPage(); // Swiped right -> prev page
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. PAGE 2: 30-CANDLE CAKE & REAL-TIME BLOW DETECTION
+  // ---------------------------------------------------------------------------
   const candlesRack = document.getElementById("candles-rack");
   const blowAllBtn = document.getElementById("blow-all-candles-btn");
-  const startMicBlowBtn = document.getElementById("start-mic-blow-btn");
   const relightBtn = document.getElementById("relight-candles-btn");
   const wishBanner = document.getElementById("wish-banner");
-  const micStatusContainer = document.getElementById("mic-status-container");
   const micStatusText = document.getElementById("mic-status-text");
   const micLevelBar = document.getElementById("mic-level-bar");
   const breathValEl = document.getElementById("breath-val");
-
-  let micStream = null;
-  let micAudioContext = null;
-  let micAnalyser = null;
-  let micAnimId = null;
-  let isListeningToMic = false;
-  let breathAccumulator = 0;
 
   function renderCandles() {
     if (!candlesRack) return;
@@ -195,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const candle = document.createElement("div");
       candle.className = "single-candle";
       candle.dataset.index = i;
-      candle.title = `Candle #${i} - Click to blow out!`;
+      candle.title = `Candle #${i} - Click or blow to extinguish!`;
 
       candle.innerHTML = `
         <div class="candle-flame"></div>
@@ -220,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function blowAllCandlesProgression() {
-    stopMicListening();
+    pauseMicListening();
     const candles = document.querySelectorAll(".single-candle:not(.blown)");
     candles.forEach((c, idx) => {
       setTimeout(() => {
@@ -234,10 +382,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function onAllCandlesBlown() {
-    stopMicListening();
+    pauseMicListening();
     playCelebrationFanfare();
 
-    // Spectacular celebration confetti
     if (typeof confetti === "function") {
       const duration = 3.5 * 1000;
       const animationEnd = Date.now() + duration;
@@ -255,137 +402,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (wishBanner) wishBanner.classList.remove("hidden");
     if (blowAllBtn) blowAllBtn.classList.add("hidden");
-    if (startMicBlowBtn) startMicBlowBtn.classList.add("hidden");
     if (relightBtn) relightBtn.classList.remove("hidden");
+    if (micStatusText) micStatusText.innerHTML = "🎉 <strong>POOF! All 30 candles blown!</strong> Wish sent! ✨";
   }
 
   function randomInRange(min, max) {
     return Math.random() * (max - min) + min;
   }
 
-  // Real Microphone Blow Detector
-  async function startMicListening() {
-    if (isListeningToMic) {
-      stopMicListening();
-      return;
-    }
-
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Microphone access is not supported by this browser. You can still use the 'Tap To Blow' button!");
-      return;
-    }
-
-    // CRITICAL: Synchronously initialize/resume AudioContext on user click
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!micAudioContext) {
-      micAudioContext = new AudioCtx();
-    }
-    if (micAudioContext.state === "suspended") {
-      micAudioContext.resume();
-    }
-
-    // Disable noise cancellation/echo cancellation so breath & wind turbulence aren't muted
-    const audioConstraints = {
-      echoCancellation: false,
-      noiseSuppression: false,
-      autoGainControl: false
-    };
+  // Setup & connect microphone stream to analyser
+  async function setupAndStartMic() {
+    if (isListeningToMic) return;
 
     try {
-      try {
-        micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: false });
-      } catch (constraintErr) {
-        // Fallback to basic audio if specialized constraints are rejected
-        console.log("Fallback to basic audio constraints:", constraintErr);
-        micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!micAudioContext && AudioCtx) {
+        micAudioContext = new AudioCtx();
       }
-
-      if (micAudioContext.state === "suspended") {
+      if (micAudioContext && micAudioContext.state === "suspended") {
         await micAudioContext.resume();
       }
 
-      micAnalyser = micAudioContext.createAnalyser();
-      micAnalyser.fftSize = 512;
-      micAnalyser.smoothingTimeConstant = 0.15;
+      if (!micStream) {
+        const audioConstraints = {
+          audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+          video: false
+        };
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+        } catch (e) {
+          micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        }
+      }
 
-      const source = micAudioContext.createMediaStreamSource(micStream);
-      source.connect(micAnalyser);
+      if (micAudioContext && !micAnalyser) {
+        micAnalyser = micAudioContext.createAnalyser();
+        micAnalyser.fftSize = 512;
+        micAnalyser.smoothingTimeConstant = 0.15;
+        const source = micAudioContext.createMediaStreamSource(micStream);
+        source.connect(micAnalyser);
+      }
 
       isListeningToMic = true;
       breathAccumulator = 0;
 
-      if (micStatusContainer) micStatusContainer.classList.remove("hidden");
-      if (micStatusText) micStatusText.innerHTML = "Listening... <strong>Blow directly onto your microphone now!</strong> 🌬️";
-      if (startMicBlowBtn) {
-        startMicBlowBtn.innerHTML = `
-          <i data-lucide="mic-off" class="w-5 h-5"></i>
-          <span>Stop Listening</span>
-        `;
-        if (window.lucide) lucide.createIcons();
+      if (micStatusText) {
+        micStatusText.innerHTML = "🎙️ Mic Active: <strong>Blow onto your screen/mic now!</strong> 🌬️";
       }
 
       processMicAudio();
     } catch (err) {
-      console.warn("Microphone access error:", err);
-      if (micStatusContainer) micStatusContainer.classList.remove("hidden");
+      console.log("Mic activation notice:", err);
       if (micStatusText) {
-        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-          micStatusText.innerHTML = "⚠️ <strong>Microphone blocked:</strong> Please click the camera/lock icon in your address bar to allow mic access, or use <em>Tap To Blow</em>!";
-        } else {
-          micStatusText.textContent = "Mic error: " + (err.message || "Could not access microphone. Use 'Tap To Blow'!");
-        }
+        micStatusText.innerHTML = "Tap <em>'Or Tap To Blow'</em> below if mic is blocked!";
       }
     }
   }
 
-  function stopMicListening() {
+  function pauseMicListening() {
     isListeningToMic = false;
     if (micAnimId) {
       cancelAnimationFrame(micAnimId);
       micAnimId = null;
     }
-    if (micStream) {
-      micStream.getTracks().forEach(track => track.stop());
-      micStream = null;
-    }
-    if (micAudioContext && micAudioContext.state !== "closed") {
-      micAudioContext.close().catch(() => {});
-      micAudioContext = null;
-    }
-
-    // Reset flame flutter
-    document.querySelectorAll(".candle-flame").forEach(f => {
+    document.querySelectorAll(".candle-flame").forEach((f) => {
       f.classList.remove("fluttering");
       f.style.removeProperty("--blow-angle");
     });
-
-    if (micStatusContainer) micStatusContainer.classList.add("hidden");
-    if (startMicBlowBtn) {
-      startMicBlowBtn.innerHTML = `
-        <i data-lucide="mic" class="w-5 h-5"></i>
-        <span>Blow Into Your Mic! 🎙️💨</span>
-      `;
-      if (window.lucide) lucide.createIcons();
-    }
   }
 
   function processMicAudio() {
     if (!isListeningToMic || !micAnalyser) return;
 
-    // 1. Get raw float time domain data (range -1.0 to +1.0)
+    // Time domain RMS calculation
     const timeData = new Float32Array(micAnalyser.fftSize);
     micAnalyser.getFloatTimeDomainData(timeData);
-
     let sumSq = 0;
     for (let i = 0; i < timeData.length; i++) {
       sumSq += timeData[i] * timeData[i];
     }
     const rms = Math.sqrt(sumSq / timeData.length);
 
-    // 2. Get frequency data (focus on low frequency wind turbulence)
+    // Low-frequency wind energy calculation
     const freqData = new Uint8Array(micAnalyser.frequencyBinCount);
     micAnalyser.getByteFrequencyData(freqData);
-
     let lowFreqSum = 0;
     const lowBins = 10;
     for (let i = 1; i <= lowBins; i++) {
@@ -393,12 +493,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const lowAvg = lowFreqSum / lowBins;
 
-    // Scaled scores (0 - 100)
     const volumeScore = Math.min(100, Math.round(rms * 280));
     const lowScore = Math.min(100, Math.round((lowAvg / 255) * 100));
     const breathScore = Math.max(volumeScore, lowScore);
 
-    // Update real-time visual breath meter
     if (micLevelBar) {
       micLevelBar.style.width = `${Math.min(100, breathScore * 1.4)}%`;
     }
@@ -408,27 +506,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const flames = document.querySelectorAll(".candle-flame");
 
-    // Real-time flame physics: bend and wobble in reaction to breath
+    // Real-time flame physics
     if (breathScore > 8) {
       const angle = Math.min(42, breathScore * 1.2);
-      flames.forEach(f => {
+      flames.forEach((f) => {
         f.classList.add("fluttering");
         f.style.setProperty("--blow-angle", `-${angle}deg`);
       });
 
-      // Accumulate sustained blowing
       if (breathScore > 20) {
         breathAccumulator += breathScore * 0.12;
       }
     } else {
-      flames.forEach(f => f.classList.remove("fluttering"));
+      flames.forEach((f) => f.classList.remove("fluttering"));
       breathAccumulator = Math.max(0, breathAccumulator - 0.4);
     }
 
-    // Trigger blowout condition:
-    // Either a sharp burst (breathScore >= 45) or gentle sustained blow (breathAccumulator >= 8)
+    // Trigger blowout condition
     if (breathScore >= 45 || breathAccumulator >= 8) {
-      if (micStatusText) micStatusText.innerHTML = "🎉 <strong>POOF! Wish made!</strong> ✨🎂";
       blowAllCandlesProgression();
       return;
     }
@@ -436,29 +531,23 @@ document.addEventListener("DOMContentLoaded", () => {
     micAnimId = requestAnimationFrame(processMicAudio);
   }
 
-  if (startMicBlowBtn) {
-    startMicBlowBtn.addEventListener("click", startMicListening);
-  }
-
-  if (blowAllBtn) {
-    blowAllBtn.addEventListener("click", blowAllCandlesProgression);
-  }
+  if (blowAllBtn) blowAllBtn.addEventListener("click", blowAllCandlesProgression);
 
   if (relightBtn) {
     relightBtn.addEventListener("click", () => {
       renderCandles();
       if (wishBanner) wishBanner.classList.add("hidden");
       if (blowAllBtn) blowAllBtn.classList.remove("hidden");
-      if (startMicBlowBtn) startMicBlowBtn.classList.remove("hidden");
       if (relightBtn) relightBtn.classList.add("hidden");
+      setupAndStartMic();
     });
   }
 
   renderCandles();
 
-  // ===========================================================================
-  // 4. POLAROID MEMORY LANE
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
+  // 4. PAGE 3: POLAROID MEMORY LANE
+  // ---------------------------------------------------------------------------
   const polaroidGrid = document.getElementById("polaroid-grid");
 
   function renderPolaroids() {
@@ -519,9 +608,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderPolaroids();
 
-  // ===========================================================================
-  // 5. 30 REASONS WHY I LOVE YOU
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
+  // 5. PAGE 4: 30 REASONS WHY I LOVE YOU
+  // ---------------------------------------------------------------------------
   const reasonsGrid = document.getElementById("reasons-grid");
   const revealedCountEl = document.getElementById("revealed-count");
   const reasonsProgressBar = document.getElementById("reasons-progress-bar");
@@ -602,16 +691,62 @@ document.addEventListener("DOMContentLoaded", () => {
               confetti({ particleCount: 120, spread: 90 });
             }
           }
-        }, idx * 50);
+        }, idx * 45);
       });
     });
   }
 
   renderReasons();
 
-  // ===========================================================================
-  // 6. QUICK CUSTOMIZER MODAL
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
+  // 6. PAGE 5: THE SECRET LOVE LETTER & FINALE
+  // ---------------------------------------------------------------------------
+  function applyPersonalization() {
+    const name = cfg.girlfriendName || "My Love";
+    const nick = cfg.nickname || name;
+
+    const coverName = document.getElementById("cover-name");
+    const salutation = document.getElementById("letter-salutation");
+    const letterBody = document.getElementById("letter-body");
+    const signoff = document.getElementById("letter-signoff");
+    const signature = document.getElementById("letter-signature");
+
+    if (coverName) coverName.textContent = `${nick}!`;
+    if (salutation) {
+      salutation.textContent = cfg.letter?.salutation || `To My Dearest ${name},`;
+    }
+    if (letterBody && cfg.letter?.paragraphs) {
+      letterBody.innerHTML = cfg.letter.paragraphs
+        .map(p => `<p>${p}</p>`)
+        .join("");
+    }
+    if (signoff) {
+      signoff.textContent = cfg.letter?.signoff || "All my love, forever and always,";
+    }
+    if (signature) {
+      signature.textContent = cfg.letter?.signature || "Yours ❤️";
+    }
+  }
+
+  applyPersonalization();
+
+  const finalConfettiBtn = document.getElementById("final-confetti-btn");
+  if (finalConfettiBtn) {
+    finalConfettiBtn.addEventListener("click", () => {
+      playCelebrationFanfare();
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 120,
+          spread: 100,
+          origin: { y: 0.5 }
+        });
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 7. QUICK CUSTOMIZER MODAL
+  // ---------------------------------------------------------------------------
   const openCustomizerBtn = document.getElementById("open-customizer-btn");
   const closeCustomizerBtn = document.getElementById("close-customizer-btn");
   const cancelCustomBtn = document.getElementById("cancel-custom-btn");
@@ -637,12 +772,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (quickCustomForm) {
     quickCustomForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (inputName.value.trim()) {
-        cfg.girlfriendName = inputName.value.trim();
-      }
-      if (inputNickname.value.trim()) {
-        cfg.nickname = inputNickname.value.trim();
-      }
+      if (inputName.value.trim()) cfg.girlfriendName = inputName.value.trim();
+      if (inputNickname.value.trim()) cfg.nickname = inputNickname.value.trim();
       applyPersonalization();
       closeModal();
       playCelebrationFanfare();
@@ -650,7 +781,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialize Lucide Icons
-  if (window.lucide) {
-    lucide.createIcons();
-  }
+  if (window.lucide) lucide.createIcons();
 });

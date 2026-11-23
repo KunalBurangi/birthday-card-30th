@@ -1,28 +1,25 @@
-# 🎂 30th Birthday Scrapbook & Interactive E-Card
+# 🎂 30th Birthday Multi-Page Interactive Greeting Card
 
-A handcrafted, interactive Polaroid & Scrapbook web experience celebrating her milestone 30th birthday on November 30!
+A handcrafted, interactive multi-page greeting card book celebrating her milestone 30th birthday on November 30!
 
 ---
 
 ## ✨ Features Included
-1. **Interactive Wax Seal Envelope Unwrapping**: Tap the vintage 3D wax seal to unwrap the card with a sound fanfare and sparkling confetti.
-2. **Interactive 30-Candle Cake with Real Breath Detection**:
-   - 30 individual glowing, flickering candles.
-   - **Real Microphone Blow Detection 🎙️**: Tap **"Blow Into Your Mic! 🎙️💨"** and physically blow onto your phone or laptop microphone!
-   - Real-time wind feedback: the candle flames bend and flicker violently in response to breath volume!
-   - Once blown, realistic smoke puff animations rise from the wicks, celebratory fanfare plays, and a grand multi-burst confetti celebration triggers!
-   - Also includes a manual **"Tap To Blow"** button as an instant fallback.
-3. **Polaroid Scrapbook Memory Wall**:
-   - 6 Polaroid photos pinned with washi tape and realistic drop-shadows.
-   - Click any Polaroid to flip it and read the memory, date, and sweet story behind it.
-4. **"30 Reasons Why I Love You" Flip Cards**:
-   - 30 numbered interactive cards (#1 to #30) with thoughtful, romantic reasons.
-   - Interactive progress bar tracking how many she's opened + "Reveal All" button.
-5. **The Secret Parchment Love Letter**:
-   - Beautiful lined letter celebrating entering Chapter 30 with deep affection and pride.
-6. **Background Music Soundtrack**:
-   - Soft romantic acoustic piano track with a retro vinyl player widget (Play/Pause/Mute).
-   - Built-in Web Audio API fallback synthesizer so sound works anywhere, even offline.
+1. **Interactive Multi-Page Card (Card Book)**:
+   - **Page 1: The Card Cover** (Airmail wax seal unsealing, Chapter 30 milestones).
+   - **Page 2: The 30-Candle Cake** (Blow out 30 candles with real microphone breath detection!).
+   - **Page 3: Polaroid Scrapbook** (6 flip polaroids with memories & dates).
+   - **Page 4: 30 Reasons Why I Love You** (30 interactive unlockable cards).
+   - **Page 5: The Secret Love Letter** (Parchment letter & finale confetti).
+2. **Gesture Page Turning**:
+   - Swipe left / right on mobile screens.
+   - Click `< Prev` / `Next >` buttons or direct page dots.
+   - Use keyboard Arrow keys (`←` and `→`).
+3. **Instant Microphone Permission**:
+   - Asks for microphone permission right upon opening the card.
+   - When she turns to **Page 2 (The Cake)**, the microphone is already armed and listening! She can blow directly onto her phone/laptop screen without pressing any button!
+4. **Romantic Soundtrack**:
+   - Soft acoustic piano background music with a spinning vinyl record player widget.
 
 ---
 

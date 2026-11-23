@@ -22,362 +22,385 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="selection:bg-rose-200 selection:text-rose-900">
+<body class="selection:bg-rose-200 selection:text-rose-900 pb-28">
 
-  <!-- =========================================================================
-       1. ENVELOPE OPENING GATE
-       ========================================================================= -->
-  <div id="envelope-gate">
-    <div class="relative max-w-md w-full bg-[#f4ece1] rounded-2xl p-8 sm:p-10 shadow-2xl border-4 border-[#e5d3bc] text-center transform transition-all duration-700">
-      
-      <!-- Top washi tape -->
-      <div class="washi-tape tape-top-center"></div>
-
-      <!-- Airmail / Stamp styling -->
-      <div class="flex justify-between items-start mb-6">
-        <div class="text-left">
-          <span class="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            Special Delivery 💌
-          </span>
-          <p class="text-xs text-stone-500 mt-1 font-mono">Date: November 30, 2026</p>
-        </div>
-        <div class="w-14 h-16 border-2 border-dashed border-rose-300 rounded flex flex-col items-center justify-center p-1 bg-white rotate-3 shadow-sm">
-          <span class="text-xs font-bold text-rose-500">30¢</span>
-          <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500 my-0.5"></i>
-          <span class="text-[9px] text-stone-400 uppercase font-mono">AIR MAIL</span>
-        </div>
-      </div>
-
-      <!-- Envelope Title -->
-      <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 font-bold mb-2">
-        A Special Delivery For
-      </h2>
-      <p id="gate-recipient-name" class="font-handwriting text-4xl sm:text-5xl text-rose-600 mb-6 font-bold">
-        Birthday Queen ✨
-      </p>
-
-      <p class="text-stone-600 text-sm mb-8 leading-relaxed">
-        Someone has prepared a handcrafted memory scrapbook to celebrate your monumental 30th birthday!
-      </p>
-
-      <!-- Wax Seal Button -->
-      <div class="flex flex-col items-center justify-center">
-        <button id="break-seal-btn" class="wax-seal group" aria-label="Break Seal to Open">
-          <!-- Inner '30' styled in CSS -->
-        </button>
-        <p class="font-note text-lg text-stone-500 mt-3 animate-pulse">
-          ✨ Tap the wax seal to unwrap your card ✨
-        </p>
-      </div>
-
-      <p class="text-[11px] text-stone-400 mt-6 italic">
-        Tip: Make sure your sound is on for the background music 🎵
-      </p>
+  <!-- Top Action & Info Bar -->
+  <header class="max-w-4xl mx-auto px-4 pt-6 pb-3 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 text-xs font-semibold px-3 py-1.5 rounded-full border border-amber-200 shadow-sm">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+        Chapter 30 • Interactive Card
+      </span>
     </div>
-  </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Quick Personalize Modal Trigger -->
+      <button id="open-customizer-btn" class="inline-flex items-center gap-1.5 bg-white text-stone-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-stone-300 shadow-sm hover:bg-stone-50 transition">
+        <i data-lucide="settings" class="w-3.5 h-3.5 text-stone-500"></i>
+        <span>Personalize</span>
+      </button>
+    </div>
+  </header>
 
 
   <!-- =========================================================================
-       MAIN SCRAPBOOK CONTENT
+       MAIN MULTI-PAGE CARD BOOK WRAPPER
        ========================================================================= -->
-  <div id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+  <main class="card-book-wrapper px-3 sm:px-4">
 
-    <!-- Top Action Bar (Customizer Helper & Audio) -->
-    <header class="flex justify-between items-center mb-10">
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 text-xs font-medium px-3 py-1.5 rounded-full border border-amber-200 shadow-sm">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
-          Chapter 30 • Limited Edition
-        </span>
-      </div>
+    <!-- Card Book Container (Swipe Gestures Enabled) -->
+    <div id="card-book" class="card-book relative">
 
-      <div class="flex items-center gap-3">
-        <!-- Quick Personalize Modal Trigger -->
-        <button id="open-customizer-btn" class="inline-flex items-center gap-1.5 bg-white text-stone-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-stone-300 shadow-sm hover:bg-stone-50 transition">
-          <i data-lucide="settings" class="w-3.5 h-3.5 text-stone-500"></i>
-          <span>Personalize Card</span>
-        </button>
-      </div>
-    </header>
+      <!-- =====================================================================
+           PAGE 1: CARD COVER & UNSEALING
+           ===================================================================== -->
+      <section class="card-page active" data-page="1" id="page-1">
+        <div class="washi-tape tape-top-center"></div>
 
-
-    <!-- =======================================================================
-         HERO SECTION: SCRAPBOOK BANNER
-         ======================================================================= -->
-    <section class="relative bg-[#fffdfa] rounded-3xl p-8 sm:p-14 shadow-xl border-2 border-[#ede3d5] mb-16 overflow-hidden">
-      
-      <!-- Washi tape decorations on corners -->
-      <div class="washi-tape tape-top-left"></div>
-      <div class="washi-tape tape-top-right"></div>
-
-      <!-- Cute Stamps & Badges -->
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <div class="inline-flex items-center gap-2 bg-rose-50 text-rose-600 px-4 py-1.5 rounded-full border border-rose-200">
-          <i data-lucide="cake" class="w-4 h-4"></i>
-          <span class="font-semibold text-xs tracking-wide uppercase">Official 30th Birthday Edition</span>
-        </div>
-        <div class="font-note text-stone-500 text-lg">
-          📍 November 30, 2026
-        </div>
-      </div>
-
-      <!-- Main Headline -->
-      <div class="text-center my-6">
-        <h1 class="font-serif-title text-4xl sm:text-6xl lg:text-7xl font-bold text-stone-800 leading-tight">
-          Happy 30th Birthday, <br class="hidden sm:inline">
-          <span id="hero-name" class="font-handwriting text-5xl sm:text-7xl lg:text-8xl text-rose-500 inline-block rotate-[-1deg]">
-            My Sunshine!
-          </span>
-        </h1>
-        <p class="max-w-2xl mx-auto text-stone-600 sm:text-lg mt-4 font-note text-xl">
-          Welcome to the flirty, fabulous, and unforgettable thirties! Today is all about celebrating you, your heart, and the magic you bring into my world.
-        </p>
-      </div>
-
-      <!-- Milestone Stat Badges -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-dashed border-stone-200 text-center">
-        <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-100">
-          <div class="text-2xl sm:text-3xl font-bold text-amber-700 font-serif-title">30</div>
-          <div class="text-xs text-amber-800 uppercase tracking-wider font-semibold mt-1">Glorious Years</div>
-        </div>
-        <div class="p-4 bg-rose-50/60 rounded-2xl border border-rose-100">
-          <div class="text-2xl sm:text-3xl font-bold text-rose-700 font-serif-title">360</div>
-          <div class="text-xs text-rose-800 uppercase tracking-wider font-semibold mt-1">Months of Radiance</div>
-        </div>
-        <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100">
-          <div class="text-2xl sm:text-3xl font-bold text-orange-700 font-serif-title">10,958</div>
-          <div class="text-xs text-orange-800 uppercase tracking-wider font-semibold mt-1">Days of Being Loved</div>
-        </div>
-        <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100">
-          <div class="text-2xl sm:text-3xl font-bold text-emerald-700 font-serif-title">∞</div >
-          <div class="text-xs text-emerald-800 uppercase tracking-wider font-semibold mt-1">Forever To Go</div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- =======================================================================
-         INTERACTIVE 30 CANDLES BIRTHDAY CAKE
-         ======================================================================= -->
-    <section class="relative bg-[#fffdfa] rounded-3xl p-8 sm:p-12 shadow-xl border-2 border-[#ede3d5] mb-16 text-center">
-      <div class="pushpin"></div>
-
-      <div class="max-w-xl mx-auto mb-6">
-        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
-          Make A Wish! 🎂
-        </span>
-        <h2 class="font-serif-title text-3xl sm:text-4xl font-bold text-stone-800">
-          Blow Out Your 30 Candles
-        </h2>
-        <p class="font-note text-lg sm:text-xl text-stone-600 mt-2">
-          Close your eyes, think of your biggest wish for chapter 30, and tap the candles or press the button below!
-        </p>
-      </div>
-
-      <!-- Cake Visual with 30 Candles -->
-      <div class="cake-container my-8">
-        
-        <!-- 30 Candles Array Container -->
-        <div id="candles-rack" class="candles-rack">
-          <!-- 30 candles generated by script -->
-        </div>
-
-        <!-- Tier 1 (Top) -->
-        <div class="w-48 h-12 bg-gradient-to-r from-rose-200 via-rose-100 to-rose-200 mx-auto rounded-t-xl border-b-4 border-rose-300 relative shadow-sm">
-          <div class="absolute -bottom-2 inset-x-0 h-4 bg-white/70 rounded-full"></div>
-        </div>
-
-        <!-- Tier 2 (Middle) -->
-        <div class="w-64 h-16 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 mx-auto border-b-4 border-amber-200 relative shadow-md">
-          <div class="flex justify-around items-center h-full px-4">
-            <span class="text-xs font-bold text-amber-600 font-serif-title">★ CHAPTER 30 ★</span>
+        <!-- Airmail / Stamp styling -->
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-left">
+            <span class="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+              Special Delivery 💌
+            </span>
+            <p class="text-xs text-stone-500 mt-1 font-mono">Date: November 30, 2026</p>
+          </div>
+          <div class="w-14 h-16 border-2 border-dashed border-rose-300 rounded flex flex-col items-center justify-center p-1 bg-white rotate-3 shadow-sm">
+            <span class="text-xs font-bold text-rose-500">30¢</span>
+            <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500 my-0.5"></i>
+            <span class="text-[9px] text-stone-400 uppercase font-mono">AIR MAIL</span>
           </div>
         </div>
 
-        <!-- Tier 3 (Bottom Base) -->
-        <div class="w-80 h-20 bg-gradient-to-r from-rose-300 via-rose-200 to-rose-300 mx-auto rounded-b-2xl relative shadow-lg">
-          <div class="flex justify-center items-center h-full">
-            <div class="bg-white/80 px-4 py-1.5 rounded-full shadow-inner border border-rose-200">
-              <span class="font-handwriting text-2xl font-bold text-rose-600">30 & Thriving</span>
+        <!-- Cover Headline -->
+        <div class="text-center my-6">
+          <p class="font-note text-lg text-amber-700 font-bold uppercase tracking-widest mb-1">
+            A Handcrafted Keepsake For
+          </p>
+          <h1 class="font-serif-title text-4xl sm:text-6xl font-bold text-stone-800 leading-tight">
+            Happy 30th Birthday, <br>
+            <span id="cover-name" class="font-handwriting text-5xl sm:text-7xl text-rose-500 inline-block rotate-[-1deg] mt-1">
+              My Sunshine!
+            </span>
+          </h1>
+          <p class="max-w-xl mx-auto text-stone-600 font-note text-lg sm:text-xl mt-3">
+            Welcome to the fabulous, unforgettable thirties! Open this card to step into your birthday surprise.
+          </p>
+        </div>
+
+        <!-- Wax Seal Button to Open Card -->
+        <div class="flex flex-col items-center justify-center my-6">
+          <button id="cover-open-btn" class="wax-seal group" aria-label="Open Card">
+            <!-- 30 rendered by CSS -->
+          </button>
+          <p class="font-note text-lg text-stone-500 mt-3 animate-pulse">
+            ✨ Tap the wax seal or swipe to open ✨
+          </p>
+        </div>
+
+        <!-- Milestone Stats Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 pt-6 border-t border-dashed border-stone-200 text-center">
+          <div class="p-3 bg-amber-50/70 rounded-2xl border border-amber-100">
+            <div class="text-2xl font-bold text-amber-700 font-serif-title">30</div>
+            <div class="text-[11px] text-amber-800 uppercase font-semibold">Glorious Years</div>
+          </div>
+          <div class="p-3 bg-rose-50/70 rounded-2xl border border-rose-100">
+            <div class="text-2xl font-bold text-rose-700 font-serif-title">360</div>
+            <div class="text-[11px] text-rose-800 uppercase font-semibold">Months of Joy</div>
+          </div>
+          <div class="p-3 bg-orange-50/70 rounded-2xl border border-orange-100">
+            <div class="text-2xl font-bold text-orange-700 font-serif-title">10,958</div>
+            <div class="text-[11px] text-orange-800 uppercase font-semibold">Days of Radiance</div>
+          </div>
+          <div class="p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100">
+            <div class="text-2xl font-bold text-emerald-700 font-serif-title">∞</div >
+            <div class="text-[11px] text-emerald-800 uppercase font-semibold">Forever To Go</div>
+          </div>
+        </div>
+
+        <!-- Page turn footer hint -->
+        <div class="mt-8 text-center">
+          <button class="next-page-trigger inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform hover:scale-105 active:scale-95 text-sm">
+            <span>Next: Blow Your Candles 🎂</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           PAGE 2: THE 30-CANDLE BIRTHDAY CAKE (REAL MIC BLOW)
+           ===================================================================== -->
+      <section class="card-page" data-page="2" id="page-2">
+        <div class="pushpin"></div>
+
+        <div class="text-center max-w-xl mx-auto mb-4">
+          <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-1">
+            Page 2 • The Milestone Cake 🎂
+          </span>
+          <h2 class="font-serif-title text-3xl sm:text-4xl font-bold text-stone-800">
+            Blow Out Your 30 Candles!
+          </h2>
+          <p class="font-note text-lg text-stone-600 mt-1">
+            Close your eyes, make your biggest wish for chapter 30, and blow directly onto your phone/laptop microphone! 🌬️
+          </p>
+        </div>
+
+        <!-- Interactive 3-Tier Cake with 30 Candles -->
+        <div class="cake-container my-6">
+          <div id="candles-rack" class="candles-rack">
+            <!-- 30 candles generated dynamically -->
+          </div>
+
+          <!-- Tier 1 (Top) -->
+          <div class="w-48 h-12 bg-gradient-to-r from-rose-200 via-rose-100 to-rose-200 mx-auto rounded-t-xl border-b-4 border-rose-300 relative shadow-sm">
+            <div class="absolute -bottom-2 inset-x-0 h-4 bg-white/70 rounded-full"></div>
+          </div>
+
+          <!-- Tier 2 (Middle) -->
+          <div class="w-64 h-16 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 mx-auto border-b-4 border-amber-200 relative shadow-md">
+            <div class="flex justify-around items-center h-full px-4">
+              <span class="text-xs font-bold text-amber-600 font-serif-title">★ CHAPTER 30 ★</span>
+            </div>
+          </div>
+
+          <!-- Tier 3 (Bottom Base) -->
+          <div class="w-80 h-20 bg-gradient-to-r from-rose-300 via-rose-200 to-rose-300 mx-auto rounded-b-2xl relative shadow-lg">
+            <div class="flex justify-center items-center h-full">
+              <div class="bg-white/80 px-4 py-1.5 rounded-full shadow-inner border border-rose-200">
+                <span class="font-handwriting text-2xl font-bold text-rose-600">30 & Thriving</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cake Platter Plate -->
+          <div class="w-96 h-4 bg-stone-300 rounded-full mx-auto -mt-1 shadow-md border-b-2 border-stone-400"></div>
+        </div>
+
+        <!-- Live Breath Detection & Status Meter (Running Automatically) -->
+        <div class="max-w-md mx-auto my-4 text-center">
+          
+          <div id="mic-status-container" class="bg-amber-50/80 border border-amber-200 rounded-2xl p-3.5 shadow-sm">
+            <div class="flex items-center justify-center gap-2 text-stone-700 font-semibold text-xs mb-1.5">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+              </span>
+              <span id="mic-status-text">🎙️ Mic Active: <strong>Blow onto your screen/mic now!</strong> 🌬️</span>
+            </div>
+
+            <!-- Breath Level Bar -->
+            <div class="w-full bg-stone-200 h-2.5 rounded-full overflow-hidden p-0.5">
+              <div id="mic-level-bar" class="h-full bg-gradient-to-r from-teal-400 via-amber-400 to-rose-500 rounded-full transition-all duration-75" style="width: 0%;"></div>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-stone-500 font-mono mt-1 px-1">
+              <span>Breath: <strong id="breath-val" class="text-rose-600">0%</strong></span>
+              <span class="text-stone-400">Target: 35%</span>
+            </div>
+          </div>
+
+          <!-- Fallback Tap Button & Relight Button -->
+          <div class="flex items-center justify-center gap-3 mt-3">
+            <button id="blow-all-candles-btn" class="inline-flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold px-4 py-2 rounded-full border border-stone-200 transition">
+              <i data-lucide="wind" class="w-3.5 h-3.5 text-stone-500"></i>
+              <span>Or Tap To Blow 🌬️</span>
+            </button>
+
+            <button id="relight-candles-btn" class="hidden inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-semibold px-4 py-2 rounded-full hover:bg-amber-200 transition">
+              <i data-lucide="flame" class="w-3.5 h-3.5 text-orange-500"></i>
+              <span>Relight Candles</span>
+            </button>
+          </div>
+
+          <!-- Wish Celebration Banner -->
+          <div id="wish-banner" class="hidden mt-4 p-3 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-emerald-800 animate-bounce">
+            <span class="text-xl">✨🎉</span>
+            <p class="font-handwriting text-xl font-bold">Your wish has been carried to the stars!</p>
+            <p class="text-xs text-emerald-700">May every single dream of yours come true this decade.</p>
+          </div>
+        </div>
+
+        <!-- Page Turn Action -->
+        <div class="mt-6 text-center">
+          <button class="next-page-trigger inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform hover:scale-105 active:scale-95 text-sm">
+            <span>Next: Our Memory Lane 📸</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           PAGE 3: POLAROID MEMORY LANE
+           ===================================================================== -->
+      <section class="card-page" data-page="3" id="page-3">
+        <div class="washi-tape tape-top-right"></div>
+
+        <div class="text-center max-w-xl mx-auto mb-6">
+          <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-1">
+            Page 3 • Memory Scrapbook 📸
+          </span>
+          <h2 class="font-serif-title text-3xl sm:text-4xl font-bold text-stone-800">
+            A Decade of Beautiful Moments
+          </h2>
+          <p class="font-note text-lg text-stone-600 mt-1">
+            (Tap any photo to flip it over and read the memory behind it!)
+          </p>
+        </div>
+
+        <!-- Polaroid Grid -->
+        <div id="polaroid-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 my-4">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Page Turn Action -->
+        <div class="mt-8 text-center">
+          <button class="next-page-trigger inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform hover:scale-105 active:scale-95 text-sm">
+            <span>Next: 30 Reasons Why I Love You 💖</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           PAGE 4: 30 REASONS WHY I LOVE YOU
+           ===================================================================== -->
+      <section class="card-page" data-page="4" id="page-4">
+        <div class="pushpin"></div>
+
+        <div class="text-center max-w-2xl mx-auto mb-6">
+          <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-1">
+            Page 4 • Golden 30 Collection 💖
+          </span>
+          <h2 class="font-serif-title text-3xl sm:text-4xl font-bold text-stone-800">
+            30 Reasons Why I Love You
+          </h2>
+          <p class="font-note text-lg text-stone-600 mt-1">
+            One for every year you've graced this earth. Tap each card to unlock!
+          </p>
+
+          <!-- Progress Tracker -->
+          <div class="mt-4 max-w-md mx-auto">
+            <div class="flex justify-between items-center text-xs font-semibold text-stone-500 mb-1 px-1">
+              <span>Progress: <span id="revealed-count" class="text-rose-600 font-bold">0</span> / 30 Revealed</span>
+              <button id="reveal-all-reasons-btn" class="text-rose-600 hover:text-rose-700 underline text-xs">
+                Reveal All ✨
+              </button>
+            </div>
+            <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+              <div id="reasons-progress-bar" class="bg-gradient-to-r from-rose-400 to-rose-600 h-full w-0 transition-all duration-500"></div>
             </div>
           </div>
         </div>
 
-        <!-- Cake Platter Plate -->
-        <div class="w-96 h-4 bg-stone-300 rounded-full mx-auto -mt-1 shadow-md border-b-2 border-stone-400"></div>
-      </div>
+        <!-- 30 Reasons Grid -->
+        <div id="reasons-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 my-4">
+          <!-- Rendered dynamically -->
+        </div>
 
-      <!-- Candle Controls & Wish Status -->
-      <div class="flex flex-col items-center justify-center gap-4 mt-6">
-        
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <!-- Actual Mic Blow Button -->
-          <button id="start-mic-blow-btn" class="inline-flex items-center gap-2.5 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition transform">
-            <i data-lucide="mic" class="w-5 h-5"></i>
-            <span>Blow Into Your Mic! 🎙️💨</span>
-          </button>
-
-          <!-- Alternative Click Blow Button -->
-          <button id="blow-all-candles-btn" class="inline-flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold px-5 py-3.5 rounded-full border border-stone-200 transition">
-            <i data-lucide="wind" class="w-4 h-4 text-stone-500"></i>
-            <span>Tap To Blow 🌬️</span>
-          </button>
-
-          <button id="relight-candles-btn" class="hidden inline-flex items-center gap-2 bg-stone-100 text-stone-700 font-semibold px-5 py-3.5 rounded-full hover:bg-stone-200 transition">
-            <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
-            <span>Relight Candles</span>
+        <!-- Page Turn Action -->
+        <div class="mt-8 text-center">
+          <button class="next-page-trigger inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform hover:scale-105 active:scale-95 text-sm">
+            <span>Next: The Secret Love Letter 📜</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </div>
+      </section>
 
-        <!-- Live Breath & Mic Detection Status Meter -->
-        <div id="mic-status-container" class="hidden w-full max-w-md bg-stone-50 border border-stone-200 rounded-2xl p-4 text-center transition-all">
-          <div class="flex items-center justify-center gap-2 text-stone-700 font-semibold text-sm mb-2">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
-            </span>
-            <span id="mic-status-text">Listening... Blow directly onto your mic now! 🌬️</span>
+
+      <!-- =====================================================================
+           PAGE 5: THE SECRET LOVE LETTER
+           ===================================================================== -->
+      <section class="card-page" data-page="5" id="page-5">
+        <div class="washi-tape tape-top-center"></div>
+
+        <div class="parchment-letter p-6 sm:p-10 relative overflow-hidden">
+          
+          <!-- Crest -->
+          <div class="flex justify-between items-start border-b border-stone-200 pb-3 mb-5">
+            <div>
+              <span class="text-xs text-rose-600 font-bold uppercase tracking-wider">Page 5 • Final Page</span>
+              <h3 class="font-serif-title text-2xl sm:text-3xl font-bold text-stone-800">
+                A Letter For Your 30th
+              </h3>
+            </div>
+            <div class="w-10 h-10 rounded-full border-2 border-rose-300 flex items-center justify-center text-rose-500 bg-rose-50 shadow-inner">
+              <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+            </div>
           </div>
 
-          <!-- Breath Level Visualizer Bar -->
-          <div class="w-full bg-stone-200 h-3 rounded-full overflow-hidden p-0.5 mt-2">
-            <div id="mic-level-bar" class="h-full bg-gradient-to-r from-teal-400 via-amber-400 to-rose-500 rounded-full transition-all duration-75" style="width: 0%;"></div>
-          </div>
-          <div class="flex justify-between items-center text-[11px] text-stone-500 font-mono mt-1.5 px-1">
-            <span>Breath Level: <strong id="breath-val" class="text-rose-600">0%</strong></span>
-            <span class="text-stone-400">Target to Blow: 35%</span>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="wish-banner" class="hidden mt-6 p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl max-w-md mx-auto text-emerald-800 animate-bounce">
-        <span class="text-2xl">✨🎉</span>
-        <p class="font-handwriting text-2xl font-bold mt-1">
-          Your wish has been carried to the stars!
-        </p>
-        <p class="text-xs text-emerald-700">May every single dream of yours come true this year.</p>
-      </div>
-    </section>
-
-
-    <!-- =======================================================================
-         POLAROID MEMORY LANE (OUR STORY)
-         ======================================================================= -->
-    <section class="relative mb-16">
-      
-      <!-- Section Header -->
-      <div class="text-center mb-10">
-        <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
-          Memory Scrapbook 📸
-        </span>
-        <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-stone-800">
-          A Decade of Beautiful Moments
-        </h2>
-        <p class="font-note text-xl text-stone-600 mt-2">
-          (Tap any photo to flip it over and read the memory behind it!)
-        </p>
-      </div>
-
-      <!-- Polaroid Grid -->
-      <div id="polaroid-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-        <!-- Rendered dynamically by script.js -->
-      </div>
-    </section>
-
-
-    <!-- =======================================================================
-         30 REASONS WHY I LOVE YOU (INTERACTIVE CARDS)
-         ======================================================================= -->
-    <section class="relative bg-[#fffdfa] rounded-3xl p-6 sm:p-12 shadow-xl border-2 border-[#ede3d5] mb-16">
-      <div class="pushpin"></div>
-
-      <!-- Header & Progress -->
-      <div class="text-center max-w-2xl mx-auto mb-8">
-        <span class="inline-block bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
-          Golden 30 Collection 💖
-        </span>
-        <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-stone-800">
-          30 Reasons Why I Love You
-        </h2>
-        <p class="font-note text-xl text-stone-600 mt-2">
-          One for every year you've graced this earth. Tap each card to unlock!
-        </p>
-
-        <!-- Progress Tracker -->
-        <div class="mt-6">
-          <div class="flex justify-between items-center text-xs font-semibold text-stone-500 mb-1.5 px-1">
-            <span>Progress: <span id="revealed-count" class="text-rose-600 font-bold">0</span> / 30 Revealed</span>
-            <button id="reveal-all-reasons-btn" class="text-rose-600 hover:text-rose-700 underline text-xs">
-              Reveal All ✨
-            </button>
-          </div>
-          <div class="w-full bg-stone-200 h-2.5 rounded-full overflow-hidden">
-            <div id="reasons-progress-bar" class="bg-gradient-to-r from-rose-400 to-rose-600 h-full w-0 transition-all duration-500"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 30 Cards Grid -->
-      <div id="reasons-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
-        <!-- Rendered dynamically by script.js -->
-      </div>
-    </section>
-
-
-    <!-- =======================================================================
-         THE SECRET LOVE LETTER
-         ======================================================================= -->
-    <section class="relative max-w-3xl mx-auto mb-20">
-      
-      <!-- Washi tape on letter top -->
-      <div class="washi-tape tape-top-center"></div>
-
-      <div class="parchment-letter p-8 sm:p-14 relative overflow-hidden">
-        
-        <!-- Airmail border stamp / vintage crest -->
-        <div class="flex justify-between items-start border-b border-stone-200 pb-4 mb-6">
-          <div>
-            <h3 class="font-serif-title text-2xl sm:text-3xl font-bold text-stone-800">
-              A Letter For Your 30th
-            </h3>
-            <span class="text-xs text-stone-500 font-mono">CONFIDENTIAL & FOREVER</span>
-          </div>
-          <div class="w-12 h-12 rounded-full border-2 border-rose-300 flex items-center justify-center text-rose-500 bg-rose-50 shadow-inner">
-            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <!-- Salutation -->
-        <p id="letter-salutation" class="font-handwriting text-3xl sm:text-4xl text-rose-600 font-bold mb-4">
-          To My Dearest,
-        </p>
-
-        <!-- Paragraphs -->
-        <div id="letter-body" class="space-y-4 text-stone-700 text-base sm:text-lg leading-relaxed font-note">
-          <!-- Rendered dynamically from config.js -->
-        </div>
-
-        <!-- Signoff -->
-        <div class="mt-8 pt-6 border-t border-dashed border-stone-300 text-right">
-          <p id="letter-signoff" class="text-sm font-semibold text-stone-500 italic">
-            All my love, forever and always,
+          <!-- Salutation -->
+          <p id="letter-salutation" class="font-handwriting text-3xl sm:text-4xl text-rose-600 font-bold mb-3">
+            To My Dearest,
           </p>
-          <p id="letter-signature" class="font-handwriting text-4xl text-rose-600 font-bold mt-1">
-            Yours ❤️
-          </p>
+
+          <!-- Paragraphs -->
+          <div id="letter-body" class="space-y-3.5 text-stone-700 text-base sm:text-lg leading-relaxed font-note">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Signoff -->
+          <div class="mt-8 pt-5 border-t border-dashed border-stone-300 text-right">
+            <p id="letter-signoff" class="text-sm font-semibold text-stone-500 italic">
+              All my love, forever and always,
+            </p>
+            <p id="letter-signature" class="font-handwriting text-4xl text-rose-600 font-bold mt-1">
+              Yours ❤️
+            </p>
+          </div>
+        </div>
+
+        <!-- Final celebratory action -->
+        <div class="mt-8 text-center flex flex-wrap justify-center gap-3">
+          <button id="final-confetti-btn" class="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-orange-400 text-white font-bold px-6 py-2.5 rounded-full shadow-lg hover:from-rose-600 hover:to-orange-500 transition transform hover:scale-105 active:scale-95 text-sm">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Celebrate 30 & Fabulous! 🎉</span>
+          </button>
+
+          <button id="back-to-cover-btn" class="inline-flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold px-5 py-2.5 rounded-full text-sm transition">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-stone-500"></i>
+            <span>Read Again (Cover)</span>
+          </button>
+        </div>
+      </section>
+
+    </div><!-- /card-book -->
+
+  </main>
+
+
+  <!-- =========================================================================
+       PAGE NAVIGATION BAR (BOTTOM)
+       ========================================================================= -->
+  <nav class="fixed bottom-4 inset-x-4 max-w-lg mx-auto z-[990]">
+    <div class="page-nav-bar flex items-center justify-between shadow-xl">
+      <button id="prev-page-btn" class="p-2 rounded-full text-stone-600 hover:bg-stone-100 active:scale-95 transition disabled:opacity-30 disabled:pointer-events-none" aria-label="Previous Page">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Page indicator & Dots -->
+      <div class="flex flex-col items-center">
+        <span id="page-title-label" class="text-xs font-bold text-stone-800 font-serif-title">
+          Page 1 of 5: The Cover
+        </span>
+        <div class="flex items-center gap-2 mt-1" id="nav-dots-container">
+          <button class="nav-dot active" data-page-target="1" title="1. Cover"></button>
+          <button class="nav-dot" data-page-target="2" title="2. Cake"></button>
+          <button class="nav-dot" data-page-target="3" title="3. Memories"></button>
+          <button class="nav-dot" data-page-target="4" title="4. 30 Reasons"></button>
+          <button class="nav-dot" data-page-target="5" title="5. Love Letter"></button>
         </div>
       </div>
-    </section>
 
-
-    <!-- Footer Note -->
-    <footer class="text-center text-stone-500 text-xs pb-16 font-mono">
-      Handcrafted with all the love in the world for her 30th Birthday • Nov 30, 2026
-    </footer>
-
-  </div>
+      <button id="next-page-btn" class="p-2 rounded-full text-stone-600 hover:bg-stone-100 active:scale-95 transition disabled:opacity-30 disabled:pointer-events-none" aria-label="Next Page">
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <p class="text-center text-[10px] text-stone-500 mt-1.5 font-mono drop-shadow-sm">
+      👈 Swipe left/right or use arrows to turn pages 👉
+    </p>
+  </nav>
 
 
   <!-- =========================================================================
@@ -400,7 +423,7 @@
 
 
   <!-- =========================================================================
-       CUSTOMIZE MODAL (FOR KUNAL TO PREVIEW & EDIT EASILY)
+       CUSTOMIZE MODAL (FOR KUNAL)
        ========================================================================= -->
   <div id="customizer-modal" class="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto">
