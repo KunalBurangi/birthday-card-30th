@@ -1,77 +1,153 @@
 // ==============================================================================
-// 💖 30TH BIRTHDAY CARD CONFIGURATION
-// Customize her name, photos, 30 reasons, and love letter right here!
+// 💖 30TH BIRTHDAY CARD CONFIGURATION (FOR NICK)
+// Handcrafted memories from baby steps to 30 & Fabulous!
 // ==============================================================================
 
 window.BIRTHDAY_CONFIG = {
   // --- Personal Details ---
-  girlfriendName: "Birthday Queen", // Change to her actual name (e.g. "Sarah", "Emily", "Priya")
-  nickname: "My Sunshine",           // Cute pet name used in the letter & scrapbook
-  birthDate: "1996-11-30",          // 30th Birthday on Nov 30!
+  girlfriendName: "Nick",
+  nickname: "Nick",
+  birthDate: "1996-11-30",
   turningAge: 30,
   
   // --- Background Music ---
-  // Charming Music Box & Piano rendition of "Happy Birthday to You"
   musicUrl: "happy-birthday.m4a",
   musicFallbackUrl: "happy-birthday.wav",
   musicTitle: "Happy Birthday to You 🎂🎵",
 
-  // --- Photo Memories (Polaroids) ---
-  // To use your own photos: drop photos in the `images/` folder as photo1.jpg, photo2.jpg, etc.
-  // If local file isn't found, it seamlessly falls back to high-res aesthetic placeholders.
+  // --- Real Lifetime Photo Memories (Polaroids) ---
   polaroids: [
     {
-      src: "images/photo1.jpg",
-      fallback: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80",
-      caption: "That unforgettable sunset together ✨",
-      note: "The day I realized my favorite view is always looking at you.",
-      date: "Summer Getaway",
+      src: "images/1st-bday.jpeg",
+      fallback: "images/1st-bday-with-papa.jpeg",
+      caption: "Chapter 1: 1st Birthday! 🍼",
+      note: "Where this incredible story began. The sweetest, most adorable little bundle of joy in 1997.",
+      date: "November 1997",
       rotation: -3
     },
     {
-      src: "images/photo2.jpg",
-      fallback: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
-      caption: "Our coffee & long conversation dates ☕",
-      note: "Hours fly by like seconds whenever we are talking.",
-      date: "Our Favorite Sunday",
+      src: "images/1st-bday-with-papa.jpeg",
+      fallback: "images/1st-bday.jpeg",
+      caption: "Daddy's Little Girl 👨‍👧",
+      note: "Pure warmth and love from day one. You've always had that radiant light in your eyes.",
+      date: "1st Birthday Moments",
       rotation: 2.5
     },
     {
-      src: "images/photo3.jpg",
-      fallback: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-      caption: "That radiant smile of yours 💖",
-      note: "Lighting up every room you ever step into.",
-      date: "Golden Hour Magic",
+      src: "images/3st-bday.jpeg",
+      fallback: "images/4th_bday.jpeg",
+      caption: "Toddler Years & Birthday Cakes 🎂",
+      note: "Growing up fast with those bright curious eyes and the sweetest, mischievous smile.",
+      date: "Chapter 3",
       rotation: -2
     },
     {
-      src: "images/photo4.jpg",
-      fallback: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
-      caption: "Adventures & spontaneous road trips 🚗",
-      note: "Anywhere with you is my favorite destination.",
-      date: "Weekend Escape",
+      src: "images/school_anual_func.jpeg",
+      fallback: "images/4th_bday.jpeg",
+      caption: "School Annual Function Days 🎭",
+      note: "Always shining in the spotlight, full of confidence, innocence, and stage charm.",
+      date: "School Memories",
       rotation: 3
     },
     {
-      src: "images/photo5.jpg",
-      fallback: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&q=80",
-      caption: "Celebrating your glow & elegance ✨",
-      note: "Stepping into 30 more gorgeous, confident, and magnetic than ever.",
-      date: "Sweet Moments",
+      src: "images/with_grandmaa.jpeg",
+      fallback: "images/withKushi.jpeg",
+      caption: "Precious Moments with Grandma ❤️",
+      note: "Wrapped in unconditional love and the gentle blessings that shaped your kind, caring heart.",
+      date: "Sweetest Blessings",
+      rotation: -2.5
+    },
+    {
+      src: "images/some-navratri.jpeg",
+      fallback: "images/tirupatiVisit.jpeg",
+      caption: "Navratri Festival Celebrations 🪔",
+      note: "Dressed up and dancing with pure joy. Lighting up every celebration you've ever been to.",
+      date: "Festive Season",
+      rotation: 2
+    },
+    {
+      src: "images/tirupatiVisit.jpeg",
+      fallback: "images/some-navratri.jpeg",
+      caption: "Spiritual Journey to Tirupati 🕊️",
+      note: "Peaceful family moments and cherished prayers for a blessed life ahead.",
+      date: "Tirupati Visit",
       rotation: -1.5
     },
     {
-      src: "images/photo6.jpg",
-      fallback: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
-      caption: "Forever my favorite person to laugh with 🥂",
-      note: "Cheers to you, to us, and to the best decade ahead!",
-      date: "Here's to Chapter 30",
+      src: "images/18th_bday.jpeg",
+      fallback: "images/19th_bday.jpeg",
+      caption: "Stepping into 18: Adulthood! ✨",
+      note: "Chapter 18! Leaving childhood behind with big dreams, gorgeous confidence, and endless ambition.",
+      date: "18th Birthday Milestone",
+      rotation: 2.5
+    },
+    {
+      src: "images/hostel_bday.jpeg",
+      fallback: "images/bday_in_hostel_1.jpeg",
+      caption: "College & Hostel Birthday Shenanigans 🍕",
+      note: "Midnight cake cuttings, roommates, best friends, and the craziest, warmest hostel memories.",
+      date: "College Hostel Days",
+      rotation: -3
+    },
+    {
+      src: "images/pink_hair_era.jpeg",
+      fallback: "images/utopia_days.jpeg",
+      caption: "The Iconic Pink Hair Era! 💖",
+      note: "Bold, fearless, stunning, and totally unapologetic. One of your most iconic looks ever!",
+      date: "Iconic Pink Hair",
+      rotation: 3
+    },
+    {
+      src: "images/first_ever_day_of_job.jpeg",
+      fallback: "images/Ralph_lauren_days.jpeg",
+      caption: "First Ever Day of Job! 💼",
+      note: "That proud, nervous excitement on day one of your professional journey. Look how far you've come!",
+      date: "Day One in Corporate",
+      rotation: -2
+    },
+    {
+      src: "images/Ralph_lauren_days.jpeg",
+      fallback: "images/first_ever_day_of_job.jpeg",
+      caption: "The Ralph Lauren Days 👜",
+      note: "Sharp, stylish, hardworking, and leveling up in your career with effortless poise.",
+      date: "Hustle & Fashion",
       rotation: 2
+    },
+    {
+      src: "images/master's_completion.jpeg",
+      fallback: "images/first_ever_day_of_job.jpeg",
+      caption: "Master's Degree Completed! 🎓",
+      note: "Brains, beauty, grit, and triumph. So immensely proud of everything you worked for and achieved.",
+      date: "Master's Graduation",
+      rotation: -2.5
+    },
+    {
+      src: "images/utopia_days.jpeg",
+      fallback: "images/utopia_days_2.jpeg",
+      caption: "Utopia & Spontaneous Adventures 🌟",
+      note: "Living life to the fullest with unforgettable smiles, golden hours, and true happiness.",
+      date: "Utopia Days",
+      rotation: 2
+    },
+    {
+      src: "images/25th_bday.jpeg",
+      fallback: "images/23rd_bday.jpeg",
+      caption: "Quarter Century: 25th Birthday 🥂",
+      note: "Halfway through your twenties and growing more breathtaking and deeply loved every single year.",
+      date: "25 Years of Magic",
+      rotation: -2
+    },
+    {
+      src: "images/IMG_2080.jpeg",
+      fallback: "images/2025-bday.jpeg",
+      caption: "Today, Tomorrow & Forever into 30! ✨",
+      note: "Here is to you, my love. Entering Chapter 30 more radiant, magnetic, and cherished than ever. I love you!",
+      date: "November 30, 2026",
+      rotation: 2.5
     }
   ],
 
   // --- 30 Reasons Why I Love You ---
-  // Thoughtfully curated for turning 30!
   reasons: [
     "The way your eyes crinkle with pure joy when you genuinely laugh.",
     "Your fierce kindness and how deeply you care for the people you love.",
@@ -96,7 +172,7 @@ window.BIRTHDAY_CONFIG = {
     "How you turn any space into a cozy, warm, and loving home.",
     "The funny faces and secret glances we exchange across a crowded room.",
     "Your sense of humor and the silly inside jokes only the two of us understand.",
-    "How passionate you are about justice, empathy, and doing the right thing.",
+    "How passionate you are about empathy, justice, and doing what's right.",
     "The comforting warmth of resting my head on your shoulder.",
     "How you inspire me every single day to be a better partner and human.",
     "The way you celebrate the small wins in life with genuine excitement.",
@@ -107,13 +183,14 @@ window.BIRTHDAY_CONFIG = {
 
   // --- The Secret Love Letter ---
   letter: {
-    salutation: "To My Dearest,",
+    salutation: "To My Dearest Nick,",
     paragraphs: [
-      "Happy 30th Birthday! 🎂✨",
-      "They say your thirties are the golden decade—the years where you truly know your worth, embrace your magic, and bloom into your fullest power. Looking at the woman you are today, I already know this decade is going to be your most extraordinary yet.",
-      "Thank you for being my anchor, my greatest adventure, and my favorite reason to smile. Every single day with you is a gift I never take for granted. You bring so much light, laughter, and grace to my world.",
-      "As you blow out your 30 candles today, know that I am right beside you—cheering for every dream of yours, holding your hand through every chapter, and falling deeper in love with you with each passing year.",
-      "Here is to leaving your twenties with pride, stepping into 30 with pure confidence, and writing the most magical story together."
+      "Happy 30th Birthday, my love! 🎂✨",
+      "Looking back through all these memories—from your very first birthday in your father's arms, through school annual days, your college hostel adventures, your iconic pink hair, and graduating with your Master's—one thing has always remained constant: your radiant heart and your pure magic.",
+      "They say your thirties are the golden decade—the years where you truly know your power, embrace your worth, and bloom into your fullest confidence. Looking at the extraordinary woman you are today, I know with certainty that this will be your most breathtaking chapter yet.",
+      "Thank you for being my anchor, my favorite laugh, and my greatest adventure. Every day with you is a gift I will never take for granted.",
+      "As you blow out your 30 candles today, know that I am right by your side—cheering for every one of your dreams, loving every single part of you, and excited for all the memories we haven't even made yet.",
+      "Here is to leaving your twenties with pride, stepping into 30 with pure radiance, and walking hand-in-hand into forever."
     ],
     signoff: "All my love, forever and always,",
     signature: "Yours ❤️"
