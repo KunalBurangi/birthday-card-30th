@@ -241,12 +241,13 @@
           </div>
 
           <!-- Breath Level Visualizer Bar -->
-          <div class="w-full bg-stone-200 h-3 rounded-full overflow-hidden p-0.5">
+          <div class="w-full bg-stone-200 h-3 rounded-full overflow-hidden p-0.5 mt-2">
             <div id="mic-level-bar" class="h-full bg-gradient-to-r from-teal-400 via-amber-400 to-rose-500 rounded-full transition-all duration-75" style="width: 0%;"></div>
           </div>
-          <p class="text-[11px] text-stone-400 mt-1.5 font-mono">
-            Wind power will flicker & blow out the candles!
-          </p>
+          <div class="flex justify-between items-center text-[11px] text-stone-500 font-mono mt-1.5 px-1">
+            <span>Breath Level: <strong id="breath-val" class="text-rose-600">0%</strong></span>
+            <span class="text-stone-400">Target to Blow: 35%</span>
+          </div>
         </div>
 
       </div>

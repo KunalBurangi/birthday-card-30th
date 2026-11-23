@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ===========================================================================
-  // 3. INTERACTIVE 30 CANDLES CAKE (WITH REAL MIC BLOW DETECTION)
+  // 3. INTERACTIVE 30 CANDLES CAKE (WITH HIGH-SENSITIVITY REAL MIC BLOW DETECTION)
   // ===========================================================================
   const candlesRack = document.getElementById("candles-rack");
   const blowAllBtn = document.getElementById("blow-all-candles-btn");
@@ -176,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const micStatusContainer = document.getElementById("mic-status-container");
   const micStatusText = document.getElementById("mic-status-text");
   const micLevelBar = document.getElementById("mic-level-bar");
+  const breathValEl = document.getElementById("breath-val");
 
   let micStream = null;
   let micAudioContext = null;
@@ -228,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (idx === candles.length - 1) {
           onAllCandlesBlown();
         }
-      }, idx * 35);
+      }, idx * 30);
     });
   }
 
@@ -274,17 +275,38 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    try {
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    // CRITICAL: Synchronously initialize/resume AudioContext on user click
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!micAudioContext) {
       micAudioContext = new AudioCtx();
+    }
+    if (micAudioContext.state === "suspended") {
+      micAudioContext.resume();
+    }
+
+    // Disable noise cancellation/echo cancellation so breath & wind turbulence aren't muted
+    const audioConstraints = {
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false
+    };
+
+    try {
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: false });
+      } catch (constraintErr) {
+        // Fallback to basic audio if specialized constraints are rejected
+        console.log("Fallback to basic audio constraints:", constraintErr);
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      }
+
       if (micAudioContext.state === "suspended") {
         await micAudioContext.resume();
       }
 
       micAnalyser = micAudioContext.createAnalyser();
       micAnalyser.fftSize = 512;
-      micAnalyser.smoothingTimeConstant = 0.2;
+      micAnalyser.smoothingTimeConstant = 0.15;
 
       const source = micAudioContext.createMediaStreamSource(micStream);
       source.connect(micAnalyser);
@@ -293,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       breathAccumulator = 0;
 
       if (micStatusContainer) micStatusContainer.classList.remove("hidden");
-      if (micStatusText) micStatusText.textContent = "Listening... Blow gently into your mic now! 🌬️";
+      if (micStatusText) micStatusText.innerHTML = "Listening... <strong>Blow directly onto your microphone now!</strong> 🌬️";
       if (startMicBlowBtn) {
         startMicBlowBtn.innerHTML = `
           <i data-lucide="mic-off" class="w-5 h-5"></i>
@@ -304,9 +326,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       processMicAudio();
     } catch (err) {
-      console.warn("Microphone access denied or error:", err);
+      console.warn("Microphone access error:", err);
       if (micStatusContainer) micStatusContainer.classList.remove("hidden");
-      if (micStatusText) micStatusText.textContent = "Mic access blocked. You can still tap the button to blow!";
+      if (micStatusText) {
+        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+          micStatusText.innerHTML = "⚠️ <strong>Microphone blocked:</strong> Please click the camera/lock icon in your address bar to allow mic access, or use <em>Tap To Blow</em>!";
+        } else {
+          micStatusText.textContent = "Mic error: " + (err.message || "Could not access microphone. Use 'Tap To Blow'!");
+        }
+      }
     }
   }
 
@@ -326,7 +354,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Reset flame flutter
-    document.querySelectorAll(".candle-flame").forEach(f => f.classList.remove("fluttering"));
+    document.querySelectorAll(".candle-flame").forEach(f => {
+      f.classList.remove("fluttering");
+      f.style.removeProperty("--blow-angle");
+    });
 
     if (micStatusContainer) micStatusContainer.classList.add("hidden");
     if (startMicBlowBtn) {
@@ -341,56 +372,63 @@ document.addEventListener("DOMContentLoaded", () => {
   function processMicAudio() {
     if (!isListeningToMic || !micAnalyser) return;
 
+    // 1. Get raw float time domain data (range -1.0 to +1.0)
+    const timeData = new Float32Array(micAnalyser.fftSize);
+    micAnalyser.getFloatTimeDomainData(timeData);
+
+    let sumSq = 0;
+    for (let i = 0; i < timeData.length; i++) {
+      sumSq += timeData[i] * timeData[i];
+    }
+    const rms = Math.sqrt(sumSq / timeData.length);
+
+    // 2. Get frequency data (focus on low frequency wind turbulence)
     const freqData = new Uint8Array(micAnalyser.frequencyBinCount);
     micAnalyser.getByteFrequencyData(freqData);
 
-    // Wind turbulence / breath is concentrated in low frequencies (< 250Hz)
     let lowFreqSum = 0;
-    const lowBins = 14;
+    const lowBins = 10;
     for (let i = 1; i <= lowBins; i++) {
       lowFreqSum += freqData[i];
     }
     const lowAvg = lowFreqSum / lowBins;
 
-    // Time domain RMS volume
-    const timeData = new Uint8Array(micAnalyser.fftSize);
-    micAnalyser.getByteTimeDomainData(timeData);
-    let sumSquares = 0;
-    for (let i = 0; i < timeData.length; i++) {
-      const norm = (timeData[i] - 128) / 128;
-      sumSquares += norm * norm;
-    }
-    const rms = Math.sqrt(sumSquares / timeData.length);
+    // Scaled scores (0 - 100)
+    const volumeScore = Math.min(100, Math.round(rms * 280));
+    const lowScore = Math.min(100, Math.round((lowAvg / 255) * 100));
+    const breathScore = Math.max(volumeScore, lowScore);
 
-    // Dynamic wind/breath calculation
-    const breathScore = Math.min(100, Math.max(0, (lowAvg * 0.75) + (rms * 160)));
-
+    // Update real-time visual breath meter
     if (micLevelBar) {
-      micLevelBar.style.width = `${breathScore}%`;
+      micLevelBar.style.width = `${Math.min(100, breathScore * 1.4)}%`;
+    }
+    if (breathValEl) {
+      breathValEl.textContent = `${Math.min(100, Math.round(breathScore))}%`;
     }
 
     const flames = document.querySelectorAll(".candle-flame");
 
-    // Real-time visual feedback: candles flicker and bend in wind!
-    if (breathScore > 18) {
-      const angle = Math.min(45, (breathScore - 18) * 1.2);
+    // Real-time flame physics: bend and wobble in reaction to breath
+    if (breathScore > 8) {
+      const angle = Math.min(42, breathScore * 1.2);
       flames.forEach(f => {
         f.classList.add("fluttering");
         f.style.setProperty("--blow-angle", `-${angle}deg`);
       });
 
       // Accumulate sustained blowing
-      if (breathScore > 35) {
-        breathAccumulator += breathScore * 0.08;
+      if (breathScore > 20) {
+        breathAccumulator += breathScore * 0.12;
       }
     } else {
       flames.forEach(f => f.classList.remove("fluttering"));
-      breathAccumulator = Math.max(0, breathAccumulator - 0.5);
+      breathAccumulator = Math.max(0, breathAccumulator - 0.4);
     }
 
-    // Trigger blowout when strong or sustained breath is achieved
-    if (breathAccumulator >= 12 || breathScore >= 85) {
-      if (micStatusText) micStatusText.textContent = "POOF! Wish made! ✨🎂";
+    // Trigger blowout condition:
+    // Either a sharp burst (breathScore >= 45) or gentle sustained blow (breathAccumulator >= 8)
+    if (breathScore >= 45 || breathAccumulator >= 8) {
+      if (micStatusText) micStatusText.innerHTML = "🎉 <strong>POOF! Wish made!</strong> ✨🎂";
       blowAllCandlesProgression();
       return;
     }
